@@ -1,0 +1,27 @@
+<div *ngIf="allCurrencies === null || userCurrencies == null"><p>Список валют загружается...</p></div>
+<div *ngIf="allCurrencies?.length === 0 && userCurrencies !== null"><p>Справочник валют пуст</p></div>
+<div *ngIf="allCurrencies?.length !== null && userCurrencies !== null">
+  <form>
+    <mat-form-field class="currency-chip-list" appearance="fill">
+      <mat-label *ngIf="selectedCurrencies && selectedCurrencies.length === 0">Нажмите чтобы добавить валюту</mat-label>
+      <mat-label *ngIf="selectedCurrencies && selectedCurrencies.length > 0">Мои валюты</mat-label>
+      <mat-chip-grid #chipGrid aria-label="Выбор валюты">
+        <mat-chip-row *ngFor="let currency of selectedCurrencies" (removed)="removeFromSelected(currency)">
+          {{currency.name}} ({{currency.code}})
+          <button matChipRemove [attr.aria-label]="'удалить ' + currency.name + '('+currency.code+')'">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+      </mat-chip-grid>
+      <input placeholder="Добавить валюту..." #currencyInput [formControl]="currenciesCtrl"
+             [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
+             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             (matChipInputTokenEnd)="add($event)"/>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+        <mat-option *ngFor="let currency of filteredCurrencies | async" [value]="currency">
+          {{currency.name}} ({{currency.code}})
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+</div>
