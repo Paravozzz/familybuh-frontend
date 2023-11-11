@@ -1,6 +1,9 @@
-<app-navbar (activeButton)="navbarActiveButton = $event"></app-navbar>
-<app-incomes *ngIf="navbarActiveButton === eButtonName.INCOMES"></app-incomes>
-<app-expenses *ngIf="navbarActiveButton === eButtonName.EXPENSES"></app-expenses>
-<app-categories *ngIf="navbarActiveButton === eButtonName.CATEGORIES"></app-categories>
-<app-accounts *ngIf="navbarActiveButton === eButtonName.ACCOUNTS"></app-accounts>
-<app-currencies *ngIf="navbarActiveButton === eButtonName.CURRENCIES"></app-currencies>
+<div *ngIf="init === true; else userNotInit">
+  <app-navbar (activeButton)="navbarActiveButton = $event"></app-navbar>
+  <app-incomes *ngIf="navbarActiveButton === eButtonName.INCOMES"></app-incomes>
+  <app-expenses *ngIf="navbarActiveButton === eButtonName.EXPENSES"></app-expenses>
+  <app-categories *ngIf="navbarActiveButton === eButtonName.CATEGORIES"></app-categories>
+  <app-accounts *ngIf="navbarActiveButton === eButtonName.ACCOUNTS"></app-accounts>
+  <app-currencies *ngIf="navbarActiveButton === eButtonName.CURRENCIES"></app-currencies>
+</div>
+<ng-template #userNotInit><mat-progress-bar mode="indeterminate"></mat-progress-bar></ng-template>

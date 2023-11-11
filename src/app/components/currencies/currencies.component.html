@@ -1,25 +1,26 @@
-<div *ngIf="allCurrencies === null || userCurrencies == null"><p>Список валют загружается...</p></div>
-<div *ngIf="allCurrencies?.length === 0 && userCurrencies !== null"><p>Справочник валют пуст</p></div>
-<div *ngIf="allCurrencies?.length !== null && userCurrencies !== null">
+<div *ngIf="!allCurrenciesLoaded || !userCurrenciesLoaded"><mat-progress-bar mode="indeterminate"></mat-progress-bar></div>
+<div *ngIf="allCurrenciesLoaded && allCurrencies?.length === 0"><p>Справочник валют пуст</p></div>
+<div *ngIf="allCurrencies?.length !== 0">
   <form>
     <mat-form-field class="currency-chip-list" appearance="fill">
-      <mat-label *ngIf="selectedCurrencies && selectedCurrencies.length === 0">Нажмите чтобы добавить валюту</mat-label>
-      <mat-label *ngIf="selectedCurrencies && selectedCurrencies.length > 0">Мои валюты</mat-label>
-      <mat-chip-grid #chipGrid aria-label="Выбор валюты">
-        <mat-chip-row *ngFor="let currency of selectedCurrencies" (removed)="removeFromSelected(currency)">
-          {{currency.name}} ({{currency.code}})
-          <button matChipRemove [attr.aria-label]="'удалить ' + currency.name + '('+currency.code+')'">
+      <mat-label *ngIf="userCurrencies.length > 0">Валюты пользователя</mat-label>
+      <mat-label *ngIf="userCurrencies.length === 0">Нажмите, что бы выбрать валюту</mat-label>
+      <mat-chip-grid #chipGrid>
+        <mat-chip-row *ngFor="let currency of userCurrencies" (removed)="remove(currency)">
+          {{currency}}
+          <button matChipRemove>
             <mat-icon>cancel</mat-icon>
           </button>
         </mat-chip-row>
       </mat-chip-grid>
-      <input placeholder="Добавить валюту..." #currencyInput [formControl]="currenciesCtrl"
+      <input placeholder="Поиск валюты..." #currencyInput [formControl]="currencyCtrl"
              [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-             (matChipInputTokenEnd)="add($event)"/>
+             (matChipInputTokenEnd)="add($event)"
+      />
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
         <mat-option *ngFor="let currency of filteredCurrencies | async" [value]="currency">
-          {{currency.name}} ({{currency.code}})
+          {{currency}}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>

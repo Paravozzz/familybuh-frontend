@@ -1,150 +1,131 @@
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Currency} from "src/app/interfaces/Currency";
-import {HttpClient} from "@angular/common/http";
 import {FormControl} from "@angular/forms";
 import {map, Observable, startWith} from "rxjs";
 import {ENTER} from "@angular/cdk/keycodes";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent} from "@angular/material/chips";
+import {CurrencyService} from "../../service/currency.service";
 
 @Component({
   selector: 'app-currencies',
   templateUrl: './currencies.component.html',
   styleUrls: ['./currencies.component.css']
 })
-export class CurrenciesComponent implements AfterViewInit {
+export class CurrenciesComponent implements OnInit {
+  /**
+   * Справочник валют
+   */
+  allCurrencies: Currency[] = [];
+  allCurrenciesLoaded: boolean = false;
+  /**
+   * Пользовательские валюты
+   */
+  userCurrencies: string[] = [];
+  userCurrenciesLoaded: boolean = false;
+  /**
+   * Отфильтрованные валюты при автозаполнении
+   */
+  filteredCurrencies!: Observable<string[]>;
+
   separatorKeysCodes: number[] = [ENTER];
-  currenciesCtrl = new FormControl('');
-  filteredCurrencies!: Observable<Currency[]>;
-  selectedCurrencies: Currency[] = [];
-  allCurrencies: Currency[] | null = null;
-  userCurrencies: Currency[] | null = null;
+  currencyCtrl = new FormControl('');
+
   @ViewChild('currencyInput') currencyInput!: ElementRef<HTMLInputElement>;
 
-  constructor(private http: HttpClient) {
-
+  constructor(protected currencyService: CurrencyService) {
+    this.filteredCurrencies = this.currencyCtrl.valueChanges.pipe(
+      startWith(null),
+      map((currency: string | null) => (currency ? this._filter(currency) : this.allCurrencies.map(currency => this.currencyService.getFullName(currency)).filter(currency => !this.userCurrencies.includes(currency)).slice())),
+    );
   }
 
-  ngAfterViewInit(): void {
-    this.http.get<Currency[]>("/api/currencies", {withCredentials: true})
+  ngOnInit(): void {
+    this.currencyService.getAll()
       .subscribe({
-        next: currencies => {
-          this.allCurrencies = currencies;
-          if (!this.allCurrencies)
-            this.allCurrencies = [];
-          this.filteredCurrencies = this._updateFiltered();
+        next: value => {
+          if (value && Array.isArray(value)) {
+            value = value.sort((a, b) => ('' + this.currencyService.getFullName(a)).localeCompare(this.currencyService.getFullName(b)));
+            this.allCurrencies.push(...value);
+            this.allCurrenciesLoaded = true;
+          } else {
+            console.error("Не удалось загрузить справочник валют!");
+          }
         },
         error: err => {
           console.error(err);
         },
         complete: () => {
-
+          this.currencyCtrl.setValue(null);
         }
       });
 
-    this.http.get<Currency[]>("/api/user/currencies", {withCredentials: true})
+    this.currencyService.getUsersCurrencies()
       .subscribe({
-        next: currencies => {
-          if (currencies) {
-            this.selectedCurrencies.push(...currencies);
-            this.userCurrencies = currencies;
+        next: value => {
+          if (value && Array.isArray(value)) {
+            value = value.sort((a, b) => ('' + this.currencyService.getFullName(a)).localeCompare(this.currencyService.getFullName(b)));
+            this.userCurrencies.push(...value.map(currency => this.currencyService.getFullName(currency)));
+            this.userCurrenciesLoaded = true;
           }
-          else {
-            console.error("Error while fetching userCurrencies (null)!");
-          }
-        },
-        error: err => {
+        }, error: err => {
           console.error(err);
         },
         complete: () => {
-
+          this.currencyCtrl.setValue(null);
         }
       })
+
   }
 
+  /**
+   * Добавление в поле еще одного Chip
+   * @param event
+   */
   add(event: MatChipInputEvent): void {
-    const value = event.value;
+    console.log("add");
+    const value = (event.value || '').trim();
 
-    // Add our currency if we find one
     if (value) {
-      const matchCurrencies: Currency[] = this.allCurrencies!.filter(currency => this._filterCurrencyByStringValue(currency, value));
-      if (matchCurrencies.length == 1) {
-        const selectedCurrency: Currency = matchCurrencies[0];
-        if (selectedCurrency)
-          this._removeFromAllCurrenciesAndAddToSelected(selectedCurrency);
+      const filteredCurrencies = this._filter(value);
+      if (filteredCurrencies.length == 1) {
+        this.userCurrencies.push(filteredCurrencies[0]);
+      } else {
+        return;
       }
     }
 
     // Clear the input value
-    event.chipInput.clear();
+    event.chipInput!.clear();
 
-    this.currenciesCtrl.setValue(null);
+    this.currencyCtrl.setValue(null);
   }
 
-  selected(event: MatAutocompleteSelectedEvent): void {
-    const selectedCurrency = event.option.value;
-    this._removeFromAllCurrenciesAndAddToSelected(selectedCurrency)
-    this.currencyInput.nativeElement.value = '';
-    this.currenciesCtrl.setValue(null);
-  }
+  remove(currency: string): void {
+    console.warn("Удаление пользовательской валюты недоступно!");
+    return;
+    const index = this.userCurrencies.indexOf(currency);
 
-  removeFromSelected(currency: Currency): void {
-    this._removeFromSelectedAndAddToAllCurrencies(currency);
-  }
-
-  private _updateFiltered(): Observable<Currency[]> {
-    return this.currenciesCtrl.valueChanges.pipe(
-      startWith(null),
-      map((currency: string | null) => (currency ? this._filter(currency) : this.allCurrencies!.slice())),
-    );
-  }
-
-  private _removeFromSelectedAndAddToAllCurrencies(currency: Currency) {
-    const index = this.selectedCurrencies.indexOf(currency);
     if (index >= 0) {
-      this.selectedCurrencies.splice(index, 1);
-      if (this.allCurrencies!.indexOf(currency) < 0) {
-        this.allCurrencies!.push(currency);
-        this.allCurrencies!.sort((a, b) => this._sortCurrencyById(a, b))
-      }
-      this.filteredCurrencies = this._updateFiltered();
+      this.userCurrencies.splice(index, 1);
+      this.currencyCtrl.setValue(null);
     }
   }
 
-  private _removeFromAllCurrenciesAndAddToSelected(currency: Currency) {
-
-    this.http.post<Currency>("/api/user/currency/" + currency.code, {}, {withCredentials: true})
-      .subscribe({
-        next: currency => {
-          const index = this.allCurrencies!.indexOf(currency);
-          if (index >= 0) {
-            if (this.selectedCurrencies.indexOf(currency) < 0) {
-              this.selectedCurrencies.push(currency);
-            }
-            this.allCurrencies!.splice(index, 1);
-            this.filteredCurrencies = this._updateFiltered();
-          }
-        },
-        error: err => {
-          console.error(err);
-        },
-        complete: () => {
-
-        }
-      });
+  selected(event: MatAutocompleteSelectedEvent): void {
+    console.log("selected");
+    this.userCurrencies.push(event.option.viewValue);
+    this.currencyInput.nativeElement.value = '';
+    this.currencyCtrl.setValue(null);
   }
 
-  private _sortCurrencyById(a: Currency, b: Currency): number {
-    if (a.id === b.id) return 0;
-    return Number.parseInt(a.id) - Number.parseInt(b.id);
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.allCurrencies
+      .map(currency => this.currencyService.getFullName(currency))
+      .filter(currency => !this.userCurrencies.includes(currency))
+      .filter(currency => currency.toLowerCase().includes(filterValue));
   }
 
-  private _filter(value: string): Currency[] {
-    value = value.toLowerCase();
-    return this.allCurrencies!.filter(currency => this._filterCurrencyByStringValue(currency, value));
-  }
-
-  private _filterCurrencyByStringValue(currency: Currency, value: string) {
-    return currency.code.toLowerCase().includes(value) || currency.name.toLowerCase().includes(value);
-  }
 }
