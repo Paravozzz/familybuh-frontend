@@ -1,0 +1,13 @@
+.category-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.category-list {
+  width: 95%;
+}
+
+.category-list-between {
+  padding: 5px;
+}

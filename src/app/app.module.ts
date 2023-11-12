@@ -25,6 +25,7 @@ import {InitDialogComponent} from './components/init/init-dialog/init-dialog.com
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatSelectModule} from "@angular/material/select";
+import {MatCardModule} from "@angular/material/card";
 
 @NgModule({
   declarations: [
@@ -37,25 +38,26 @@ import {MatSelectModule} from "@angular/material/select";
     CurrenciesComponent,
     InitDialogComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    KeycloakAngularModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTableModule,
-    MatInputModule,
-    MatChipsModule,
-    ReactiveFormsModule,
-    MatAutocompleteModule,
-    FormsModule,
-    MatDialogModule,
-    MatProgressBarModule,
-    MatSelectModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        KeycloakAngularModule,
+        HttpClientModule,
+        BrowserAnimationsModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        MatTableModule,
+        MatInputModule,
+        MatChipsModule,
+        ReactiveFormsModule,
+        MatAutocompleteModule,
+        FormsModule,
+        MatDialogModule,
+        MatProgressBarModule,
+        MatSelectModule,
+        MatCardModule
+    ],
   providers: [{
     provide: APP_INITIALIZER,
     useFactory: initializeKeycloak,
