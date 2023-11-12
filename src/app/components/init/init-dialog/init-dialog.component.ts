@@ -5,6 +5,7 @@ import {Currency} from "../../../interfaces/Currency";
 import {MatSelectChange} from "@angular/material/select";
 import {MatOption} from "@angular/material/core";
 import {InitService} from "../../../service/init.service";
+import {CurrencyService} from "../../../service/currency.service";
 
 export interface InitDialogData {
   currencyCode: string
@@ -23,12 +24,14 @@ export class InitDialogComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<InitDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: InitDialogData,
               private http: HttpClient,
-              private initService: InitService
+              private initService: InitService,
+              private currencyService: CurrencyService
   ) {
   }
 
   ngOnInit(): void {
-    this.http.get<Currency[]>("/api/currencies", {withCredentials: true})
+    //Загружаем справочник валют
+    this.currencyService.getAll()
       .subscribe({
         next: currencies => {
           if (currencies) {

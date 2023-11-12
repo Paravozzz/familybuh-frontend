@@ -28,6 +28,19 @@ export class CurrencyService {
   }
 
   /**
+   * Добавление новой валюты в список валют пользователя
+   * @param currencyCode буквенный код валюты
+   */
+  public attachCurrencyToUser(currencyCode: string): Observable<Currency> {
+    if (!currencyCode)
+      console.error("currencyCode is null or undefined");
+    if (currencyCode.length != 3)
+      console.error("currencyCode length must equals 3, but now is " + currencyCode.length);
+
+    return this.http.post<Currency>("/api/user/currency/" + currencyCode.toUpperCase(), {}, {withCredentials: true});
+  }
+
+  /**
    * Формирование полного имени валюты
    * @param currency
    */

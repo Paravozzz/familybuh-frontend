@@ -36,7 +36,13 @@ export class CurrenciesComponent implements OnInit {
   constructor(protected currencyService: CurrencyService) {
     this.filteredCurrencies = this.currencyCtrl.valueChanges.pipe(
       startWith(null),
-      map((currency: string | null) => (currency ? this._filter(currency) : this.allCurrencies.map(currency => this.currencyService.getFullName(currency)).filter(currency => !this.userCurrencies.includes(currency)).slice())),
+      map((currency: string | null) => (
+        currency
+          ? this._filter(currency)
+          : this.allCurrencies
+            .map(currency => this.currencyService.getFullName(currency))
+            .filter(currency => !this.userCurrencies.includes(currency)).slice()
+      )),
     );
   }
 
@@ -79,7 +85,8 @@ export class CurrenciesComponent implements OnInit {
   }
 
   /**
-   * Добавление в поле еще одного Chip
+   * Добавление в поле еще одного Chip.
+   * Срабатывает по нажатию Enter
    * @param event
    */
   add(event: MatChipInputEvent): void {
@@ -89,7 +96,7 @@ export class CurrenciesComponent implements OnInit {
     if (value) {
       const filteredCurrencies = this._filter(value);
       if (filteredCurrencies.length == 1) {
-        this.userCurrencies.push(filteredCurrencies[0]);
+        this._attachCurrencyToUser(filteredCurrencies[0]);
       } else {
         return;
       }
@@ -104,17 +111,24 @@ export class CurrenciesComponent implements OnInit {
   remove(currency: string): void {
     console.warn("Удаление пользовательской валюты недоступно!");
     return;
+
     const index = this.userCurrencies.indexOf(currency);
 
     if (index >= 0) {
+      //TODO: тут должен быть вызов API удаления валюты из списка пользовательских валют
       this.userCurrencies.splice(index, 1);
       this.currencyCtrl.setValue(null);
     }
   }
 
+  /**
+   * Добавление в поле еще одного Chip.
+   * Срабатывает при выборе из Autocomplete
+   * @param event
+   */
   selected(event: MatAutocompleteSelectedEvent): void {
     console.log("selected");
-    this.userCurrencies.push(event.option.viewValue);
+    this._attachCurrencyToUser(event.option.viewValue);
     this.currencyInput.nativeElement.value = '';
     this.currencyCtrl.setValue(null);
   }
@@ -126,6 +140,25 @@ export class CurrenciesComponent implements OnInit {
       .map(currency => this.currencyService.getFullName(currency))
       .filter(currency => !this.userCurrencies.includes(currency))
       .filter(currency => currency.toLowerCase().includes(filterValue));
+  }
+
+  private _attachCurrencyToUser(currencyFullName: string) {
+    const currencyCode: string = this._getCodeFromFullName(currencyFullName);
+    return this.currencyService.attachCurrencyToUser(currencyCode)
+      .subscribe({
+        next: value => {
+          if (value) {
+            this.userCurrencies.push(currencyFullName);
+          }
+        },
+        error: err => {
+          console.error(err);
+        }
+      })
+  }
+
+  private _getCodeFromFullName(currencyFullName: string): string {
+    return currencyFullName.substring(currencyFullName.length-4, currencyFullName.length-1);
   }
 
 }
