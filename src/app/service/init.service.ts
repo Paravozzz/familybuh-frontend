@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {catchError, Observable, switchMap, tap} from "rxjs";
+import {catchError, Observable, switchMap} from "rxjs";
 import {InitCreate} from "../interfaces/InitCreate";
 
 @Injectable({
@@ -8,17 +8,25 @@ import {InitCreate} from "../interfaces/InitCreate";
 })
 export class InitService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
-  checkInit(): Observable<boolean> {
+  /**
+   * Проверка - проведена ли начальная настройка пользователя (выбрана валюта, создан мастер счёт под данную валюту)
+   */
+  public checkInit(): Observable<boolean> {
     return this.http.get<boolean>("/api/init", {withCredentials: true});
   }
 
-  init(currencyCode: string): Observable<boolean> {
+  /**
+   * Начальная настройка пользователя.
+   * @param currencyCode
+   */
+  public init(currencyCode: string): Observable<boolean> {
     const initCreate: InitCreate = <InitCreate>{};
     initCreate.currencyCode = currencyCode;
     return this.http.post("/api/init", initCreate, {withCredentials: true}).pipe(
-      switchMap(()=> {
+      switchMap(() => {
         return this.checkInit();
       }),
       catchError(error => {
