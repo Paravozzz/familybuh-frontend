@@ -26,6 +26,7 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatSelectModule} from "@angular/material/select";
 import {MatCardModule} from "@angular/material/card";
+import {CategoryDialogComponent} from "./components/category-dialog/category-dialog.component";
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import {MatCardModule} from "@angular/material/card";
     CategoriesComponent,
     CurrenciesComponent,
     InitDialogComponent,
+    CategoryDialogComponent
   ],
     imports: [
         BrowserModule,

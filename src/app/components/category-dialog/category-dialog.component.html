@@ -1,0 +1,21 @@
+<h1 mat-dialog-title>Новая категория</h1>
+<div mat-dialog-content>
+  <form [formGroup]="categoryControlGroup" class="category-form">
+    <input type="hidden" formControlName="id">
+    <mat-form-field appearance="fill">
+      <mat-label>Имя</mat-label>
+      <input matInput formControlName="name">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Тип</mat-label>
+      <mat-select formControlName="isIncome">
+        <mat-option value='false'>Расход</mat-option>
+        <mat-option value='true'>Доход</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="createCategory()">Создать</button>
+  <button mat-button mat-dialog-close>Отменить</button>
+</div>

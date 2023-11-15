@@ -3,6 +3,8 @@
 </div>
 <div class="category-list-wrapper">
   <div class="category-list-between"></div>
+  <button mat-raised-button color="primary" (click)="openAddDialog()">Новая категория</button>
+  <div class="category-list-between"></div>
   <div class="category-list" *ngFor="let category of userCategories | async; trackBy: trackById">
       <mat-card>
         <mat-card-header>
