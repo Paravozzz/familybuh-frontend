@@ -1,4 +1,5 @@
-<h1 mat-dialog-title>Новая категория</h1>
+<h1 mat-dialog-title *ngIf="data.mode === dialogMode.ADD">Новая категория</h1>
+<h1 mat-dialog-title *ngIf="data.mode === dialogMode.EDIT">Редактировать категорию</h1>
 <div mat-dialog-content>
   <form [formGroup]="categoryControlGroup" class="category-form" *ngIf="formReady">
     <input type="hidden" formControlName="id">
@@ -17,6 +18,7 @@
   <div *ngIf="!formReady"><mat-spinner></mat-spinner></div>
 </div>
 <div mat-dialog-actions>
-  <button mat-button [disabled]="createButtonDisabled" (click)="createCategory()">Создать</button>
+  <button mat-button [disabled]="submitButtonDisabled" (click)="createCategory()" *ngIf="data.mode === dialogMode.ADD">Создать</button>
+  <button mat-button [disabled]="submitButtonDisabled" (click)="updateCategory()" *ngIf="data.mode === dialogMode.EDIT">Сохранить</button>
   <button mat-button mat-dialog-close>Отменить</button>
 </div>

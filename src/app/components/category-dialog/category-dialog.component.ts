@@ -16,11 +16,11 @@ export interface CategoryDialogData {
   styleUrls: ['./category-dialog.component.css']
 })
 export class CategoryDialogComponent implements OnInit {
-
+  dialogMode = CategoriesAddEditDialogMode;
   public categoryControlGroup!: FormGroup<any>;
   public formReady: boolean = false;
   //TODO: сделать спиннер на время загрузки категории при редактировании
-  createButtonDisabled: boolean = false;
+  submitButtonDisabled: boolean = false;
   constructor(public dialogRef: MatDialogRef<CategoryDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: CategoryDialogData,
               private categoryService: CategoryService,
@@ -33,7 +33,7 @@ export class CategoryDialogComponent implements OnInit {
       this.formReady = true;
       this.categoryControlGroup = this.fb.group({
         id: 0,
-        name: 'Продукты',
+        name: '',
         isIncome: 'false'
       });
 
@@ -41,7 +41,13 @@ export class CategoryDialogComponent implements OnInit {
       this.categoryService.findById(this.data.categoryId)
         .subscribe({
           next: value => {
-            this.categoryControlGroup = this.fb.group(value);
+            this.categoryControlGroup = this.fb.group(
+              {
+                id: value.id,
+                name: value.name,
+                isIncome: value.isIncome + ''
+              }
+            );
             this.formReady = true;
           },
           error: err => {
@@ -54,7 +60,7 @@ export class CategoryDialogComponent implements OnInit {
   }
 
   createCategory() {
-    this.createButtonDisabled = true;
+    this.submitButtonDisabled = true;
     const category: Category = this.categoryControlGroup.getRawValue();
     this.categoryService.create({name: category.name, isIncome: category.isIncome})
       .subscribe({
@@ -64,7 +70,23 @@ export class CategoryDialogComponent implements OnInit {
         error: err => {
           console.error(err);
         }, complete: () => {
-          this.createButtonDisabled = false;
+          this.submitButtonDisabled = false;
+        }
+      })
+  }
+
+  updateCategory() {
+    this.submitButtonDisabled = true;
+    const category: Category = this.categoryControlGroup.getRawValue();
+    this.categoryService.updateById(category.id,{name: category.name, isIncome: category.isIncome})
+      .subscribe({
+        next: value => {
+          this.dialogRef.close(value);
+        },
+        error: err => {
+          console.error(err);
+        }, complete: () => {
+          this.submitButtonDisabled = false;
         }
       })
   }

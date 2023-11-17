@@ -37,7 +37,13 @@ export class CategoriesComponent implements OnInit {
   }
 
   openAddDialog() {
-    const matDialogRef = this.dialog.open(CategoryDialogComponent, {data: {mode: CategoriesAddEditDialogMode.ADD}});
+    const matDialogRef = this.dialog.open(CategoryDialogComponent,
+      {
+        data:
+          {
+            mode: CategoriesAddEditDialogMode.ADD
+          }
+      });
 
     matDialogRef.afterClosed().subscribe({
       next: value => {
@@ -47,7 +53,6 @@ export class CategoriesComponent implements OnInit {
   }
 
   openEditDialog(categoryId: number) {
-    this.userCategoriesLoaded = false;
     const matDialogRef = this.dialog.open(CategoryDialogComponent, {
       data: {
         mode: CategoriesAddEditDialogMode.EDIT,
