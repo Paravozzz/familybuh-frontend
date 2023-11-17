@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>Новая категория</h1>
 <div mat-dialog-content>
-  <form [formGroup]="categoryControlGroup" class="category-form">
+  <form [formGroup]="categoryControlGroup" class="category-form" *ngIf="formReady">
     <input type="hidden" formControlName="id">
     <mat-form-field appearance="fill">
       <mat-label>Имя</mat-label>
@@ -14,8 +14,9 @@
       </mat-select>
     </mat-form-field>
   </form>
+  <div *ngIf="!formReady"><mat-spinner></mat-spinner></div>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="createCategory()">Создать</button>
+  <button mat-button [disabled]="createButtonDisabled" (click)="createCategory()">Создать</button>
   <button mat-button mat-dialog-close>Отменить</button>
 </div>

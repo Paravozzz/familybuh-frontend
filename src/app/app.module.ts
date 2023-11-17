@@ -27,6 +27,7 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatSelectModule} from "@angular/material/select";
 import {MatCardModule} from "@angular/material/card";
 import {CategoryDialogComponent} from "./components/category-dialog/category-dialog.component";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 @NgModule({
   declarations: [
@@ -40,26 +41,27 @@ import {CategoryDialogComponent} from "./components/category-dialog/category-dia
     InitDialogComponent,
     CategoryDialogComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        KeycloakAngularModule,
-        HttpClientModule,
-        BrowserAnimationsModule,
-        MatToolbarModule,
-        MatIconModule,
-        MatButtonModule,
-        MatTableModule,
-        MatInputModule,
-        MatChipsModule,
-        ReactiveFormsModule,
-        MatAutocompleteModule,
-        FormsModule,
-        MatDialogModule,
-        MatProgressBarModule,
-        MatSelectModule,
-        MatCardModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    KeycloakAngularModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTableModule,
+    MatInputModule,
+    MatChipsModule,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    FormsModule,
+    MatDialogModule,
+    MatProgressBarModule,
+    MatSelectModule,
+    MatCardModule,
+    MatProgressSpinnerModule
+  ],
   providers: [{
     provide: APP_INITIALIZER,
     useFactory: initializeKeycloak,

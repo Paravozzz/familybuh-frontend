@@ -20,8 +20,7 @@ export class CategoryDialogComponent implements OnInit {
   public categoryControlGroup!: FormGroup<any>;
   public formReady: boolean = false;
   //TODO: сделать спиннер на время загрузки категории при редактировании
-  //TODO: заблочить кнопку Создать на время выполнения запроса. Обработать ситуацию с неудачным созданием/обновлением.
-  //TODO: перезагружать категории после создания/обновления категории и обработать ситуацию, когда перезагрузка категорий не удалась.
+  createButtonDisabled: boolean = false;
   constructor(public dialogRef: MatDialogRef<CategoryDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: CategoryDialogData,
               private categoryService: CategoryService,
@@ -55,6 +54,7 @@ export class CategoryDialogComponent implements OnInit {
   }
 
   createCategory() {
+    this.createButtonDisabled = true;
     const category: Category = this.categoryControlGroup.getRawValue();
     this.categoryService.create({name: category.name, isIncome: category.isIncome})
       .subscribe({
@@ -63,6 +63,8 @@ export class CategoryDialogComponent implements OnInit {
         },
         error: err => {
           console.error(err);
+        }, complete: () => {
+          this.createButtonDisabled = false;
         }
       })
   }

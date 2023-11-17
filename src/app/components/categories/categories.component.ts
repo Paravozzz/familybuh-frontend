@@ -24,6 +24,7 @@ export class CategoriesComponent implements OnInit {
   }
 
   private _fetchCategories() {
+    this.userCategoriesLoaded = false;
     return this.categoryService.getUsersCurrencies().pipe(
       tap(value => {
         this.userCategoriesLoaded = true;
@@ -36,7 +37,13 @@ export class CategoriesComponent implements OnInit {
   }
 
   openAddDialog() {
-    this.dialog.open(CategoryDialogComponent, {data: {mode: CategoriesAddEditDialogMode.ADD}});
+    const matDialogRef = this.dialog.open(CategoryDialogComponent, {data: {mode: CategoriesAddEditDialogMode.ADD}});
+
+    matDialogRef.afterClosed().subscribe({
+      next: value => {
+        this.userCategories = this._fetchCategories();
+      }
+    })
   }
 
   openEditDialog(categoryId: number) {

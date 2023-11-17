@@ -24,7 +24,7 @@ export class CategoryService {
 
   public create(categoryCreate: CategoryCreate): Observable<Category> {
     return this.http
-      .post<Category>("/api/user/category/", categoryCreate, {withCredentials: true});
+      .post<Category>("/api/user/category", categoryCreate, {withCredentials: true});
   }
 
   public updateById(id: number, category: Category ): Observable<Category> {
