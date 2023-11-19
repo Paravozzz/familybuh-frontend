@@ -1,0 +1,12 @@
+.control-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.control-list-width {
+  width: 95%;
+}
+
+.control-list-between {
+  padding: 5px;
+}

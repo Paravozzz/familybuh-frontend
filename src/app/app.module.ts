@@ -28,6 +28,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatCardModule} from "@angular/material/card";
 import {CategoryDialogComponent} from "./components/category-dialog/category-dialog.component";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { OperationInputComponent } from './components/operation-input/operation-input.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     CategoriesComponent,
     CurrenciesComponent,
     InitDialogComponent,
-    CategoryDialogComponent
+    CategoryDialogComponent,
+    OperationInputComponent
   ],
   imports: [
     BrowserModule,
