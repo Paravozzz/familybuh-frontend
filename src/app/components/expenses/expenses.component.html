@@ -1,1 +1,4 @@
-<app-operation-input></app-operation-input>
+<div *ngIf="!operationInputLoaded">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+<app-operation-input (loaded)="operationInputLoaded = $event" [operationType]="operationType.EXPENSE"/>

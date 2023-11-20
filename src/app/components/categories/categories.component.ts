@@ -25,7 +25,7 @@ export class CategoriesComponent implements OnInit {
 
   private _fetchCategories() {
     this.userCategoriesLoaded = false;
-    return this.categoryService.getUsersCurrencies().pipe(
+    return this.categoryService.getUsersCategories().pipe(
       tap(value => {
         this.userCategoriesLoaded = true;
       })

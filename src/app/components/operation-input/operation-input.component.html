@@ -9,22 +9,19 @@
     <mat-form-field appearance="fill">
       <mat-label>Валюта</mat-label>
       <mat-select>
-        <mat-option value="RUB">RUB</mat-option>
-        <mat-option value="EUR">EUR</mat-option>
+        <mat-option *ngFor="let currency of userCurrencies | async" [value]="currency.code">{{currency.code}}</mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Счёт</mat-label>
       <mat-select>
-        <mat-option value="Счтёт 1">Счтёт 1</mat-option>
-        <mat-option value="Счтёт 2">Счтёт 2</mat-option>
+        <mat-option *ngFor="let account of userAccounts | async" [value]="account.id">{{account.name}}</mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Категория</mat-label>
       <mat-select>
-        <mat-option value="Категория 1">Категория 1</mat-option>
-        <mat-option value="Категория 2">Категория 2</mat-option>
+        <mat-option *ngFor="let category of userCategories | async" [value]="category.id">{{category.name}}</mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field appearance="fill">

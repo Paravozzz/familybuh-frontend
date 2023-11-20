@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {Component} from '@angular/core';
+import {OperationTypeEnum} from "../../enums/OperationTypeEnum";
 
 @Component({
   selector: 'app-incomes',
@@ -7,8 +7,7 @@ import {HttpClient} from "@angular/common/http";
   styleUrls: ['./incomes.component.css']
 })
 export class IncomesComponent {
-
-  constructor(private http: HttpClient) {
-  }
+  operationType = OperationTypeEnum;
+  operationInputLoaded: boolean = false;
 
 }

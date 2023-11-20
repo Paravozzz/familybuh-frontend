@@ -12,7 +12,7 @@ export class CategoryService {
   constructor(private http: HttpClient) {
   }
 
-  public getUsersCurrencies(): Observable<Category[]> {
+  public getUsersCategories(): Observable<Category[]> {
     return this.http
       .get<Category[]>("/api/user/categories", {withCredentials: true});
   }
