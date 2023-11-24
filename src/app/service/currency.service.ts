@@ -47,4 +47,12 @@ export class CurrencyService {
   public getFullName(currency: Currency): string {
     return currency.name + ' (' + currency.code + ')';
   }
+
+  /**
+   * Поиск валюты по буквенному коду
+   * @param code буквенный код
+   */
+  findByCode(code: string): Observable<Currency> {
+    return this.http.get<Currency>("/api/currency/" + code.toUpperCase(), {withCredentials: true});
+  }
 }

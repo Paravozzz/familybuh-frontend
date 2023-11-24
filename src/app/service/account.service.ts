@@ -15,4 +15,10 @@ export class AccountService {
     return this.http
       .get<Account[]>("/api/user/accounts", {withCredentials: true});
   }
+
+  public getUsersAccount(id: number): Observable<Account> {
+    return this.http
+      .get<Account>("/api/user/account/" + id, {withCredentials: true});
+  }
+
 }
