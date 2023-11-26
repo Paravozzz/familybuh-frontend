@@ -10,6 +10,12 @@ import {OperationTypeEnum} from "../../enums/OperationTypeEnum";
 import {SettingService} from "../../service/setting.service";
 import {environment} from "../../../environments/environment";
 import {FormBuilder, FormGroup} from "@angular/forms";
+import * as _moment from 'moment';
+import {default as _rollupMoment} from 'moment';
+import {OperationCreate} from "../../interfaces/OperationCreate";
+import {OperationService} from "../../service/operation.service";
+
+const moment = _rollupMoment || _moment;
 
 @Component({
   selector: 'app-operation-input',
@@ -50,13 +56,15 @@ export class OperationInputComponent implements OnInit {
               private categoryService: CategoryService,
               private accountService: AccountService,
               private settingService: SettingService,
+              private operationService: OperationService,
               private fb: FormBuilder) {
     this.operationInputForm = this.fb.group({
       amount: "0",
       currencyCode: "",
       accountId: "0",
       categoryId: "0",
-      description: ""
+      description: "",
+      time: moment().format()
     });
   }
 
@@ -134,14 +142,19 @@ export class OperationInputComponent implements OnInit {
   }
 
   private _initConstants() {
-    if (this.operationType === OperationTypeEnum.EXPENSE) {
-      this.lastCurrencySettingName = environment.constants.last_exp_currency;
-      this.lastAccountSettingName = environment.constants.last_exp_account;
-      this.lastCategorySettingName = environment.constants.last_exp_category;
-    } else {
-      this.lastCurrencySettingName = environment.constants.last_inc_currency;
-      this.lastAccountSettingName = environment.constants.last_inc_account;
-      this.lastCategorySettingName = environment.constants.last_inc_category;
+    switch (this.operationType) {
+      case OperationTypeEnum.EXPENSE:
+        this.lastCurrencySettingName = environment.constants.last_exp_currency;
+        this.lastAccountSettingName = environment.constants.last_exp_account;
+        this.lastCategorySettingName = environment.constants.last_exp_category;
+        break;
+      case OperationTypeEnum.INCOME:
+        this.lastCurrencySettingName = environment.constants.last_inc_currency;
+        this.lastAccountSettingName = environment.constants.last_inc_account;
+        this.lastCategorySettingName = environment.constants.last_inc_category;
+        break;
+      default:
+        throw new Error("Incorrect operation type. Must be OperationTypeEnum.EXPENSE or OperationTypeEnum.INCOME");
     }
   }
 
@@ -155,16 +168,66 @@ export class OperationInputComponent implements OnInit {
     this.operationInputForm.patchValue({
       accountId: this.selectedAccount.id
     });
-    const result = this.userCategoriesLoaded && this.userCurrenciesLoaded && this.userAccountsLoaded;
+    const result = this.userCategoriesLoaded && this.userCurrenciesLoaded && this.userAccountsLoaded &&
+    this.lastCategoryLoaded && this.lastCurrencyLoaded && this.lastAccountLoaded;
     this.loadedEvent.emit(result);
   }
 
   operationInputSave() {
     this.saveButtonDisabled = true;
-    this.settingService.save({name: this.lastCurrencySettingName, value: "RUB"})
+    let value = this.operationInputForm.value;
+    if (typeof(value.time) !== 'string') {
+      value.time = value.time.format();
+    }
+
+    const operation: OperationCreate = <OperationCreate>value;
+    switch (this.operationType) {
+      case OperationTypeEnum.EXPENSE:
+        this._createExpense(operation);
+        break;
+      case OperationTypeEnum.INCOME:
+        this._createIncome(operation);
+        break;
+      default:
+        throw new Error("Incorrect operation type. Must be OperationTypeEnum.EXPENSE or OperationTypeEnum.INCOME");
+    }
+  }
+
+  private _createExpense(operation: OperationCreate) {
+    const subscription = this.operationService.expense(operation).subscribe({
+      next: value => {
+        console.log(value);
+        this._saveOperationDefaults(operation.currencyCode, operation.accountId, operation.categoryId)
+      }, complete: () => {
+        this.saveButtonDisabled = false;
+        subscription?.unsubscribe();
+      }
+    });
+  }
+
+  private _createIncome(operation: OperationCreate) {
+    const subscription = this.operationService.income(operation).subscribe({
+      next: value => {
+        console.log(value);
+        this._saveOperationDefaults(operation.currencyCode, operation.accountId, operation.categoryId);
+      }, complete: () => {
+        this.saveButtonDisabled = false;
+        subscription?.unsubscribe();
+      }
+    });
+  }
+
+  private _saveOperationDefaults(currencyCode: string, accountId: number, categoryId: number) {
+    this.settingService.save({name: this.lastCurrencySettingName, value: currencyCode})
       .subscribe(() => {
       });
 
-    this.saveButtonDisabled = false;
+    this.settingService.save({name: this.lastCategorySettingName, value: categoryId.toString()})
+      .subscribe(() => {
+      });
+
+    this.settingService.save({name: this.lastAccountSettingName, value: accountId.toString()})
+      .subscribe(() => {
+      });
   }
 }

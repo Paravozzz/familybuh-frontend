@@ -24,6 +24,15 @@
         <mat-option *ngFor="let category of userCategories | async" [value]="category.id">{{category.name}}</mat-option>
       </mat-select>
     </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Дата</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="time">
+      <mat-hint>ДД.ММ.ГГГГ</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
     <mat-form-field appearance="fill">
       <mat-label>Примечание</mat-label>
       <input matInput formControlName="description">

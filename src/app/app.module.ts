@@ -28,7 +28,9 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatCardModule} from "@angular/material/card";
 import {CategoryDialogComponent} from "./components/category-dialog/category-dialog.component";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import { OperationInputComponent } from './components/operation-input/operation-input.component';
+import {OperationInputComponent} from './components/operation-input/operation-input.component';
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatMomentDateModule} from "@angular/material-moment-adapter";
 
 @NgModule({
   declarations: [
@@ -45,24 +47,26 @@ import { OperationInputComponent } from './components/operation-input/operation-
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     AppRoutingModule,
     KeycloakAngularModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
     MatToolbarModule,
     MatIconModule,
     MatButtonModule,
     MatTableModule,
     MatInputModule,
     MatChipsModule,
-    ReactiveFormsModule,
     MatAutocompleteModule,
-    FormsModule,
     MatDialogModule,
     MatProgressBarModule,
     MatSelectModule,
     MatCardModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatDatepickerModule,
+    MatMomentDateModule
   ],
   providers: [{
     provide: APP_INITIALIZER,

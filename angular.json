@@ -17,7 +17,8 @@
               "keycloak-js",
               "raf",
               "base64-js",
-              "js-sha256"
+              "js-sha256",
+              "moment"
             ],
             "outputPath": "dist/familybuh",
             "index": "src/index.html",
