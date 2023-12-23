@@ -1,5 +1,4 @@
-<div class="control-list-between"></div>
-<mat-card [formGroup]="operationInputForm">
+<mat-card [formGroup]="operationInputForm" class="mt-2" >
   <mat-card-header></mat-card-header>
   <mat-card-content class="control-list">
     <mat-form-field appearance="fill">
@@ -54,8 +53,4 @@
   <mat-card-actions>
     <button mat-button (click)="operationInputSave()" [disabled]="saveButtonDisabled">Сохранить</button>
   </mat-card-actions>
-</mat-card>
-<div class="control-list-between"></div>
-<mat-card>
-  <mat-card-content>Здесь будут расходы за день</mat-card-content>
 </mat-card>

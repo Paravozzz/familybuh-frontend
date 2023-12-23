@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Currency} from "../../interfaces/Currency";
 import {CurrencyService} from "../../service/currency.service";
-import {map, Observable, tap} from "rxjs";
+import {map, Observable, Subscription, tap} from "rxjs";
 import {Category} from "../../interfaces/Category";
 import {CategoryService} from "../../service/category.service";
 import {Account} from "../../interfaces/Account";
@@ -10,10 +10,10 @@ import {OperationTypeEnum} from "../../enums/OperationTypeEnum";
 import {SettingService} from "../../service/setting.service";
 import {environment} from "../../../environments/environment";
 import {FormBuilder, FormGroup} from "@angular/forms";
-import * as _moment from 'moment';
-import {default as _rollupMoment} from 'moment';
 import {OperationCreate} from "../../interfaces/OperationCreate";
 import {OperationService} from "../../service/operation.service";
+import * as _moment from 'moment';
+import {default as _rollupMoment} from 'moment';
 
 const moment = _rollupMoment || _moment;
 
@@ -54,6 +54,8 @@ export class OperationInputComponent implements OnInit {
 
   hours: number[];
   minutes: number[];
+
+  subscription?: Subscription;
 
   constructor(private currencyService: CurrencyService,
               private categoryService: CategoryService,
@@ -189,7 +191,7 @@ export class OperationInputComponent implements OnInit {
   operationInputSave() {
     this.saveButtonDisabled = true;
     let value = this.operationInputForm.value;
-    value.date = this.computeDateAndTime(value);
+    value.date = this._computeDateAndTime(value);
 
     const operation: OperationCreate = <OperationCreate>value;
     switch (this.operationType) {
@@ -209,7 +211,7 @@ export class OperationInputComponent implements OnInit {
    * @param value
    * @private
    */
-  private computeDateAndTime(value: any): string {
+  private _computeDateAndTime(value: any): string {
     let dateAndTime: _moment.Moment = moment();
     try {
       dateAndTime = moment(value.date); //пользовательская дата с формы
@@ -249,23 +251,31 @@ export class OperationInputComponent implements OnInit {
   }
 
   private _createExpense(operation: OperationCreate) {
-    const subscription = this.operationService.expense(operation).subscribe({
+    this.subscription = this.operationService.expense(operation).subscribe({
       next: value => {
         this._saveOperationDefaults(operation.currencyCode, operation.accountId, operation.categoryId)
       }, complete: () => {
-        this.saveButtonDisabled = false;
-        subscription?.unsubscribe();
+        this._afterOperationCreate();
+      }, error: err => {
+        this._afterOperationCreate();
       }
     });
   }
 
+  private _afterOperationCreate() {
+    this.saveButtonDisabled = false;
+    this.subscription?.unsubscribe();
+    this.operationService.dailyOperationsUpdate(this.operationType, moment().format());
+  }
+
   private _createIncome(operation: OperationCreate) {
-    const subscription = this.operationService.income(operation).subscribe({
+    this.subscription = this.operationService.income(operation).subscribe({
       next: value => {
         this._saveOperationDefaults(operation.currencyCode, operation.accountId, operation.categoryId);
       }, complete: () => {
-        this.saveButtonDisabled = false;
-        subscription?.unsubscribe();
+        this._afterOperationCreate();
+      }, error: err => {
+        this._afterOperationCreate();
       }
     });
   }

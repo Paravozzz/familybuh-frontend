@@ -31,6 +31,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {OperationInputComponent} from './components/operation-input/operation-input.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatMomentDateModule} from "@angular/material-moment-adapter";
+import { OperationWigetComponent } from './components/operation-wiget/operation-wiget.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,8 @@ import {MatMomentDateModule} from "@angular/material-moment-adapter";
     CurrenciesComponent,
     InitDialogComponent,
     CategoryDialogComponent,
-    OperationInputComponent
+    OperationInputComponent,
+    OperationWigetComponent
   ],
   imports: [
     BrowserModule,
@@ -66,7 +69,8 @@ import {MatMomentDateModule} from "@angular/material-moment-adapter";
     MatCardModule,
     MatProgressSpinnerModule,
     MatDatepickerModule,
-    MatMomentDateModule
+    MatMomentDateModule,
+    NgbModule
   ],
   providers: [{
     provide: APP_INITIALIZER,

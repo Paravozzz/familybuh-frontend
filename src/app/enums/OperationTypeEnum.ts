@@ -1,4 +1,6 @@
 export enum OperationTypeEnum {
-  INCOME = 'ДОХОД',
-  EXPENSE = 'РАСХОД'
+  EXPENSE,
+  INCOME,
+  TRANSFER,
+  EXCHANGE
 }

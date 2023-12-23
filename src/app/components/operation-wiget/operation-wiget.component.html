@@ -1,0 +1,9 @@
+<mat-card class="mt-2" *ngFor="let operation of dailyOperations|async">
+  <mat-card-header>
+    <mat-card-subtitle>{{operation.category}}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content class="control-list">
+    <span style="color: firebrick" *ngIf="operationType === eOperationType.EXPENSE">{{operation.amount}} {{operation.currencyCode}}</span>
+    <span style="color: forestgreen" *ngIf="operationType === eOperationType.INCOME">{{operation.amount}} {{operation.currencyCode}}</span>
+  </mat-card-content>
+</mat-card>
