@@ -27,12 +27,25 @@
 
     <mat-form-field appearance="fill">
       <mat-label>Дата</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="time">
-      <mat-hint>ДД.ММ.ГГГГ</mat-hint>
+      <input matInput [matDatepicker]="picker" formControlName="date">
+      <mat-hint>дд.мм.гггг</mat-hint>
       <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
-
+    <mat-form-field appearance="fill">
+      <mat-label>ЧЧ</mat-label>
+      <mat-hint>час.</mat-hint>
+      <mat-select disableRipple formControlName="hour">
+        <mat-option *ngFor="let hour of hours" [value]="hour">{{hour}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>ММ</mat-label>
+      <mat-hint>мин.</mat-hint>
+      <mat-select disableRipple formControlName="minute">
+        <mat-option *ngFor="let minute of minutes" [value]="minute">{{minute}}</mat-option>
+      </mat-select>
+    </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Примечание</mat-label>
       <input matInput formControlName="description">

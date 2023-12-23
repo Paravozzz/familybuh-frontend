@@ -4,5 +4,5 @@ export interface OperationCreate {
   accountId: number,
   categoryId: number,
   description: string,
-  time: string
+  date: string,
 }
