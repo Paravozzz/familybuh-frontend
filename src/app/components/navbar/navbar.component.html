@@ -1,25 +1,18 @@
-<mat-toolbar color="primary">
-  <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-    <mat-icon>menu</mat-icon>
-  </button>
-  <span>FamilyBuh</span>
-  <button mat-stroked-button aria-label="Расходы" (click)="activeButtonEvent.emit(eButtonName.EXPENSES)">
-    Расходы
-  </button>
-  <button mat-stroked-button aria-label="Доходы" (click)="activeButtonEvent.emit(eButtonName.INCOMES)">
-    Доходы
-  </button>
-  <button mat-stroked-button aria-label="Категории" (click)="activeButtonEvent.emit(eButtonName.CATEGORIES)">
-    Категории
-  </button>
-  <button mat-stroked-button aria-label="Счета" (click)="activeButtonEvent.emit(eButtonName.ACCOUNTS)">
-    Счета
-  </button>
-  <button mat-stroked-button aria-label="Валюты" (click)="activeButtonEvent.emit(eButtonName.CURRENCIES)">
-    Валюты
-  </button>
-  <span class="example-spacer"></span>
-  <button mat-icon-button class="example-icon" aria-label="Logout">
-    <mat-icon>logout</mat-icon>
-  </button>
-</mat-toolbar>
+<nav class="navbar navbar-expand-sm" style="background-color: #e3f2fd;">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">FamilyBuh</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav" #navButtons>
+        <a class="nav-link active" href="#" (click)="navButtonClick($event,eButtonName.EXPENSES)">Расходы</a>
+        <a class="nav-link" href="#" (click)="navButtonClick($event, eButtonName.INCOMES)">Доходы</a>
+        <a class="nav-link" href="#" (click)="navButtonClick($event, eButtonName.CATEGORIES)">Категории</a>
+        <a class="nav-link" href="#" (click)="navButtonClick($event, eButtonName.ACCOUNTS)">Счета</a>
+        <a class="nav-link" href="#" (click)="navButtonClick($event, eButtonName.CURRENCIES)">Валюты</a>
+      </div>
+    </div>
+  </div>
+</nav>
