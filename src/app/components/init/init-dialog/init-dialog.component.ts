@@ -1,15 +1,9 @@
-import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Currency} from "../../../interfaces/Currency";
-import {MatSelectChange} from "@angular/material/select";
-import {MatOption} from "@angular/material/core";
 import {InitService} from "../../../service/init.service";
 import {CurrencyService} from "../../../service/currency.service";
-
-export interface InitDialogData {
-  currencyCode: string
-}
+import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-init-dialog',
@@ -18,14 +12,14 @@ export interface InitDialogData {
 })
 export class InitDialogComponent implements OnInit {
   @ViewChild("okButton") okButton!: ElementRef<HTMLInputElement>;
+  @ViewChild('currencySelector') currencySelector!: ElementRef<HTMLInputElement>;
   currencies: Currency[] = [];
-  okButtonDisabled: boolean = true;
+  okButtonDisabled: boolean = false;
 
-  constructor(public dialogRef: MatDialogRef<InitDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: InitDialogData,
-              private http: HttpClient,
+  constructor(private http: HttpClient,
               private initService: InitService,
-              private currencyService: CurrencyService
+              private currencyService: CurrencyService,
+              public activeModal: NgbActiveModal
   ) {
   }
 
@@ -36,7 +30,7 @@ export class InitDialogComponent implements OnInit {
         next: currencies => {
           if (currencies) {
             this.currencies = currencies;
-            this.currencies = currencies.sort((a, b) => this._sortCurrencyByName(a, b));
+            this.currencies.sort((a, b) => this._sortCurrencyByName(a, b));
           } else {
             console.error("Error while fetching userCurrencies (null)!");
           }
@@ -47,25 +41,27 @@ export class InitDialogComponent implements OnInit {
       });
   }
 
-  okClick(selected: MatOption | MatOption[]) {
-    if (!selected) {
+  okClick(currencyCode: string) {
+    this.okButtonDisabled = true;
+    if (!currencyCode) {
+      this.okButtonDisabled = false;
       return;
     }
 
-    if (Array.isArray(selected)) {
+    if (Array.isArray(currencyCode)) {
+      this.okButtonDisabled = false;
       console.error("Одновременный выбор нескольких валют недопустим.")
       return;
     }
 
-    const currencyCode: string = selected.value;
-    this.okButtonDisabled = true;
     this.initService.init(currencyCode).subscribe({
       next: isInit => {
         if (isInit) {
-          this.dialogRef.close(isInit);
+          this.activeModal.close(isInit);
         }
       },
       error: err => {
+        this.okButtonDisabled = false;
         console.error(err);
       },
       complete: () => {
@@ -82,7 +78,4 @@ export class InitDialogComponent implements OnInit {
     return ('' + a.name).localeCompare(b.name);
   }
 
-  onSelect(event: MatSelectChange) {
-    this.okButtonDisabled = !event.value;
-  }
 }

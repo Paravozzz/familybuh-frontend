@@ -1,8 +1,8 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component} from '@angular/core';
 import {ButtonNameEnum} from "./enums/ButtonNameEnum";
-import {MatDialog} from "@angular/material/dialog";
 import {InitDialogComponent} from "./components/init/init-dialog/init-dialog.component";
 import {InitService} from "./service/init.service";
+import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-root',
@@ -13,9 +13,9 @@ export class AppComponent implements AfterViewInit {
   init: boolean = false;
   eButtonName = ButtonNameEnum;
   navbarActiveButton: ButtonNameEnum = ButtonNameEnum.EXPENSES;
+  private initModalRef?: NgbModalRef;
 
-
-  constructor(public dialog: MatDialog, private initService: InitService) {
+  constructor(private modalService: NgbModal, private initService: InitService) {
   }
 
   ngAfterViewInit() {
@@ -31,9 +31,9 @@ export class AppComponent implements AfterViewInit {
   }
 
   private openInitDialog() {
-    const dialogRef = this.dialog.open(InitDialogComponent);
+    this.initModalRef = this.modalService.open(InitDialogComponent, {centered: true, backdrop: "static", keyboard: false});
 
-    dialogRef.afterClosed().subscribe(result => {
+    this.initModalRef.closed.subscribe(result => {
       if (result === true)
         this.init = result;
       else {

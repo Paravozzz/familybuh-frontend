@@ -1,16 +1,12 @@
-<h1 mat-dialog-title>Добро пожаловать!</h1>
-<div mat-dialog-content>
-  <h4>Для начала работы с программой необходимо выбрать основную валюту</h4>
-  <mat-form-field appearance="fill" style="width: 100%">
-    <mat-label>Валюта</mat-label>
-    <mat-select (selectionChange)="onSelect($event)" #currencySelector>
-      <mat-option *ngFor="let currency of currencies" [value]="currency.code">
-        {{currencyValue(currency)}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+<div class="modal-header">
+  <h1 class="modal-title">Добро пожаловать!</h1>
 </div>
-<div mat-dialog-actions>
-  <button mat-button [disabled]="okButtonDisabled" #okButton (click)="okClick(currencySelector.selected)">Ok</button>
-
+<div class="modal-body">
+  <h4 class="modal-title">Для начала работы с программой необходимо выбрать основную валюту:</h4>
+  <select class="form-select" aria-label="Currency" #currencySelector>
+    <option *ngFor="let currency of currencies" [value]="currency.code">{{currencyValue(currency)}}</option>
+  </select>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" [disabled]="okButtonDisabled" (click)="okClick(currencySelector.value)" #okButton>Ok</button>
 </div>
