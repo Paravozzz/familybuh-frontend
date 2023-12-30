@@ -16,12 +16,35 @@ export class OperationWigetComponent implements OnInit {
   @Input("operationType") operationType!: OperationTypeEnum;
   eOperationType = OperationTypeEnum;
   dailyOperations: Observable<OperationDto[]>;
+  dailyOperationsSummary: {currencyCode:string, summ:string}[] = [];
 
   constructor(private operationService: OperationService) {
     this.dailyOperations = this.operationService.dailyOperations;
+    const summaryMap: Map<string, number> = new Map<string, number>();
+    this.dailyOperations.subscribe(operations => {
+      summaryMap.clear();
+      this.dailyOperationsSummary = [];
+      if (!operations || operations.length == 0) {
+        return;
+      }
+      operations.forEach(operation => {
+        const currencyCode = operation.currencyCode;
+        let summ = summaryMap.get(currencyCode) ?? 0;
+        summ += Number.parseFloat(operation.amount);
+        summaryMap.set(currencyCode, summ);
+      });
+
+      for (const entry of summaryMap.entries()) {
+        this.dailyOperationsSummary.push({currencyCode: entry[0], summ: entry[1].toString()})
+      }
+    });
   }
 
   ngOnInit(): void {
     this.operationService.dailyOperationsUpdate(this.operationType, moment().format());
+  }
+
+  formatTime(date: string): string {
+    return moment(date).format('HH:mm');
   }
 }

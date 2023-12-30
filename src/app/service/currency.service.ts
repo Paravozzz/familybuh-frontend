@@ -49,6 +49,14 @@ export class CurrencyService {
   }
 
   /**
+   * Извлекает код валюты из полного наименования валюты
+   * @param currencyFullName
+   */
+  public getCodeFromFullName(currencyFullName: string): string {
+    return currencyFullName.substring(currencyFullName.length-4, currencyFullName.length-1);
+  }
+
+  /**
    * Поиск валюты по буквенному коду
    * @param code буквенный код
    */

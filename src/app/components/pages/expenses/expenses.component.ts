@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {OperationTypeEnum} from "../../enums/OperationTypeEnum";
+import {OperationTypeEnum} from "../../../enums/OperationTypeEnum";
 
 @Component({
   selector: 'app-expenses',

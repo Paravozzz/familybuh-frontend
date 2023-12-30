@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {CategoryService} from "../../service/category.service";
-import {Category} from "../../interfaces/Category";
+import {CategoryService} from "../../../service/category.service";
+import {Category} from "../../../interfaces/Category";
 import {Observable, tap} from "rxjs";
-import {MatDialog} from "@angular/material/dialog";
-import {CategoriesAddEditDialogMode} from "../../enums/CategoriesAddEditDialogMode";
-import {CategoryDialogComponent} from "../category-dialog/category-dialog.component";
+import {CategoriesAddEditDialogMode} from "../../../enums/CategoriesAddEditDialogMode";
+import {CategoryDialogComponent} from "../../category-dialog/category-dialog.component";
+import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-categories',
@@ -16,7 +16,7 @@ export class CategoriesComponent implements OnInit {
   userCategoriesLoaded: boolean = false;
   userCategories: Observable<Category[]> | undefined;
 
-  constructor(public dialog: MatDialog, private categoryService: CategoryService) {
+  constructor(private modalService: NgbModal, private categoryService: CategoryService) {
   }
 
   ngOnInit(): void {
@@ -37,15 +37,9 @@ export class CategoriesComponent implements OnInit {
   }
 
   openAddDialog() {
-    const matDialogRef = this.dialog.open(CategoryDialogComponent,
-      {
-        data:
-          {
-            mode: CategoriesAddEditDialogMode.ADD
-          }
-      });
-
-    matDialogRef.afterClosed().subscribe({
+    const modalRef: NgbModalRef = this.modalService.open(CategoryDialogComponent, {centered: true, backdrop: "static", keyboard:false});
+    modalRef.componentInstance.mode = CategoriesAddEditDialogMode.ADD;
+    modalRef.closed.subscribe({
       next: value => {
         this.userCategories = this._fetchCategories();
       }
@@ -53,14 +47,11 @@ export class CategoriesComponent implements OnInit {
   }
 
   openEditDialog(categoryId: number) {
-    const matDialogRef = this.dialog.open(CategoryDialogComponent, {
-      data: {
-        mode: CategoriesAddEditDialogMode.EDIT,
-        categoryId: categoryId
-      }
-    });
+    const modalRef: NgbModalRef = this.modalService.open(CategoryDialogComponent, {centered: true, backdrop: "static", keyboard:false});
+    modalRef.componentInstance.mode = CategoriesAddEditDialogMode.EDIT;
+    modalRef.componentInstance.categoryId = categoryId;
 
-    matDialogRef.afterClosed().subscribe({
+    modalRef.closed.subscribe({
       next: value => {
         this.userCategories = this._fetchCategories();
       }

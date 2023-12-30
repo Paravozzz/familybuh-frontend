@@ -1,24 +1,36 @@
-<h1 mat-dialog-title *ngIf="data.mode === dialogMode.ADD">Новая категория</h1>
-<h1 mat-dialog-title *ngIf="data.mode === dialogMode.EDIT">Редактировать категорию</h1>
-<div mat-dialog-content>
+<div class="modal-header">
+  <h4 class="modal-title" *ngIf="mode === dialogMode.ADD">Новая категория</h4>
+  <h4 class="modal-title" *ngIf="mode === dialogMode.EDIT">Редактировать категорию</h4>
+</div>
+<div class="modal-body">
   <form [formGroup]="categoryControlGroup" class="category-form" *ngIf="formReady">
     <input type="hidden" formControlName="id">
-    <mat-form-field appearance="fill">
-      <mat-label>Имя</mat-label>
-      <input matInput formControlName="name">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Тип</mat-label>
-      <mat-select formControlName="isIncome">
-        <mat-option value='false'>Расход</mat-option>
-        <mat-option value='true'>Доход</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="mb-3">
+      <label for="categoryName" class="form-label">Наименование категории:</label>
+      <input type="text" class="form-control" id="categoryName" formControlName="name">
+    </div>
+    <div>
+      <label for="categoryType" class="form-label">Тип категории:</label>
+      <select class="form-select" aria-label="Default select example" formControlName="isIncome" id="categoryType">
+        <option value="false">Расход</option>
+        <option value="true">Доход</option>
+      </select>
+    </div>
   </form>
-  <div *ngIf="!formReady"><mat-spinner></mat-spinner></div>
+  <div *ngIf="!formReady">
+    <div class="d-flex justify-content-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </div>
 </div>
-<div mat-dialog-actions>
-  <button mat-button [disabled]="submitButtonDisabled" (click)="createCategory()" *ngIf="data.mode === dialogMode.ADD">Создать</button>
-  <button mat-button [disabled]="submitButtonDisabled" (click)="updateCategory()" *ngIf="data.mode === dialogMode.EDIT">Сохранить</button>
-  <button mat-button mat-dialog-close>Отменить</button>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" [disabled]="submitButtonDisabled" (click)="createCategory()"
+          *ngIf="mode === dialogMode.ADD">Создать
+  </button>
+  <button type="button" class="btn btn-outline-dark" [disabled]="submitButtonDisabled" (click)="createCategory()"
+          *ngIf="mode === dialogMode.EDIT">Сохранить
+  </button>
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss('Close click')">Отменить</button>
 </div>

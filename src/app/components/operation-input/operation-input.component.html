@@ -1,56 +1,73 @@
-<mat-card [formGroup]="operationInputForm" class="mt-2" >
-  <mat-card-header></mat-card-header>
-  <mat-card-content class="control-list">
-    <mat-form-field appearance="fill">
-      <mat-label>Сумма</mat-label>
-      <input matInput formControlName="amount">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Валюта</mat-label>
-      <mat-select formControlName="currencyCode">
-        <mat-option *ngFor="let currency of userCurrencies | async" [value]="currency.code">{{currency.code}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Счёт</mat-label>
-      <mat-select formControlName="accountId">
-        <mat-option *ngFor="let account of userAccounts | async" [value]="account.id">{{account.name}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Категория</mat-label>
-      <mat-select formControlName="categoryId">
-        <mat-option *ngFor="let category of userCategories | async" [value]="category.id">{{category.name}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Дата</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="date">
-      <mat-hint>дд.мм.гггг</mat-hint>
-      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>ЧЧ</mat-label>
-      <mat-hint>час.</mat-hint>
-      <mat-select disableRipple formControlName="hour">
-        <mat-option *ngFor="let hour of hours" [value]="hour">{{hour}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>ММ</mat-label>
-      <mat-hint>мин.</mat-hint>
-      <mat-select disableRipple formControlName="minute">
-        <mat-option *ngFor="let minute of minutes" [value]="minute">{{minute}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Примечание</mat-label>
-      <input matInput formControlName="description">
-    </mat-form-field>
-  </mat-card-content>
-  <mat-card-actions>
-    <button mat-button (click)="operationInputSave()" [disabled]="saveButtonDisabled">Сохранить</button>
-  </mat-card-actions>
-</mat-card>
+<div [formGroup]="operationInputForm" class="card mb-2">
+  <div class="card-body">
+    <div class="input-group mb-2">
+      <div class="form-floating">
+        <input type="text" class="form-control" id="floatingAmountInput" formControlName="amount">
+        <label for="floatingAmountInput">Сумма</label>
+      </div>
+      <div class="form-floating">
+        <select class="form-select" aria-label="Currency select" id="floatingCurrencySelect"
+                formControlName="currencyCode">
+          <option *ngFor="let currency of userCurrencies | async" [value]="currency.code">{{currency.code}}</option>
+        </select>
+        <label for="floatingCurrencySelect">Валюта</label>
+      </div>
+    </div>
+    <div class="form-floating mb-2">
+      <select class="form-select" aria-label="Currency select" id="floatingAccountSelect" formControlName="accountId">
+        <option *ngFor="let account of userAccounts | async" [value]="account.id">{{account.name}}</option>
+      </select>
+      <label for="floatingCurrencySelect">Счёт</label>
+    </div>
+    <div class="form-floating mb-2">
+      <select class="form-select" aria-label="Currency select" id="floatingCategorySelect" formControlName="categoryId">
+        <option *ngFor="let category of userCategories | async" [value]="category.id">{{category.name}}</option>
+      </select>
+      <label for="floatingCurrencySelect">Категория</label>
+    </div>
+    <div class="row mb-2">
+      <div class="col">
+        <div class="input-group">
+          <input
+            class="form-control"
+            placeholder="гггг-мм-дд"
+            name="dp"
+            formControlName="date"
+            ngbDatepicker
+            #d="ngbDatepicker"
+          />
+          <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar3"
+                 viewBox="0 0 16 16">
+              <path
+                d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"/>
+              <path
+                d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="col">
+        <div class="input-group">
+          <select class="form-select" id="inputGroupHourSelect" formControlName="hour">
+            <option *ngFor="let hour of hours" [value]="hour">{{hour}}</option>
+          </select>
+          <label class="input-group-text" for="inputGroupHourSelect">час.</label>
+        </div>
+      </div>
+      <div class="col">
+        <div class="input-group">
+          <select class="form-select" id="inputGroupMinuteSelect" formControlName="minute">
+            <option *ngFor="let minute of minutes" [value]="minute">{{minute}}</option>
+          </select>
+          <label class="input-group-text" for="inputGroupMinuteSelect">мин.</label>
+        </div>
+      </div>
+    </div>
+    <div class="form-floating mb-2">
+      <input type="text" class="form-control" id="floatingDescriptionInput" formControlName="description">
+      <label for="floatingDescriptionInput">Примечание</label>
+    </div>
+    <button class="btn btn-primary" (click)="operationInputSave()" [disabled]="saveButtonDisabled">Сохранить</button>
+  </div>
+</div>

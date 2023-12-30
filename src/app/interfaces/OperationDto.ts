@@ -5,5 +5,5 @@ export interface OperationDto {
   accountId: number,
   category: string,
   description: string,
-  time: string
+  date: string
 }

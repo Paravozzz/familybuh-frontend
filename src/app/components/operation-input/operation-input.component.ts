@@ -14,6 +14,7 @@ import {OperationCreate} from "../../interfaces/OperationCreate";
 import {OperationService} from "../../service/operation.service";
 import * as _moment from 'moment';
 import {default as _rollupMoment} from 'moment';
+import {NgbCalendar, NgbDateAdapter, NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
 
 const moment = _rollupMoment || _moment;
 
@@ -57,19 +58,23 @@ export class OperationInputComponent implements OnInit {
 
   subscription?: Subscription;
 
+  model!: NgbDateStruct;
+
   constructor(private currencyService: CurrencyService,
               private categoryService: CategoryService,
               private accountService: AccountService,
               private settingService: SettingService,
               private operationService: OperationService,
-              private fb: FormBuilder) {
+              private fb: FormBuilder,
+              private ngbCalendar: NgbCalendar,
+              private dateAdapter: NgbDateAdapter<string>) {
     this.operationInputForm = this.fb.group({
       amount: "0",
       currencyCode: "",
       accountId: "0",
       categoryId: "0",
       description: "",
-      date: moment(),
+      date: this.today,
       hour: "",
       minute: ""
     });
@@ -95,6 +100,10 @@ export class OperationInputComponent implements OnInit {
 
     //Счета
     this._loadAccounts();
+  }
+
+  get today() {
+    return this.dateAdapter.toModel(this.ngbCalendar.getToday())!;
   }
 
   private _loadAccounts() {
@@ -214,9 +223,10 @@ export class OperationInputComponent implements OnInit {
   private _computeDateAndTime(value: any): string {
     let dateAndTime: _moment.Moment = moment();
     try {
-      dateAndTime = moment(value.date); //пользовательская дата с формы
+      dateAndTime = moment(value.date.year+"-"+value.date.month+"-"+value.date.day); //пользовательская дата с формы
     } catch {
       //do nothing
+      console.log(dateAndTime);
     }
     //по-умолчанию текущее время
     let time = moment();
