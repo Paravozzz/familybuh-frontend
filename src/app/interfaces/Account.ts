@@ -1,5 +1,6 @@
 export interface Account {
   id: number,
   name: string,
-  description: string
+  description: string,
+  currency: {code: string}
 }

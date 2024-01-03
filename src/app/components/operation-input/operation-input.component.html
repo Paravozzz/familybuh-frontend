@@ -14,8 +14,8 @@
       </div>
     </div>
     <div class="form-floating mb-2">
-      <select class="form-select" aria-label="Currency select" id="floatingAccountSelect" formControlName="accountId">
-        <option *ngFor="let account of userAccounts | async" [value]="account.id">{{account.name}}</option>
+      <select class="form-select" aria-label="Currency select" id="floatingAccountSelect" formControlName="accountName">
+        <option *ngFor="let accountName of userAccountNames" [value]="accountName">{{accountName}}</option>
       </select>
       <label for="floatingCurrencySelect">Счёт</label>
     </div>

@@ -14,7 +14,7 @@ import {OperationCreate} from "../../interfaces/OperationCreate";
 import {OperationService} from "../../service/operation.service";
 import * as _moment from 'moment';
 import {default as _rollupMoment} from 'moment';
-import {NgbCalendar, NgbDateAdapter, NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
+import {NgbCalendar, NgbDateAdapter} from "@ng-bootstrap/ng-bootstrap";
 
 const moment = _rollupMoment || _moment;
 
@@ -38,9 +38,9 @@ export class OperationInputComponent implements OnInit {
   userCategoriesLoaded: boolean = false;
   selectedCategory: Category = <Category>{id: 0};
 
-  userAccounts!: Observable<Account[]>;
+  userAccountNames: string[] = [];
   userAccountsLoaded: boolean = false;
-  selectedAccount: Account = <Account>{id: 0};
+  selectedAccountName: string = "";
 
   saveButtonDisabled: boolean = false;
 
@@ -58,7 +58,11 @@ export class OperationInputComponent implements OnInit {
 
   subscription?: Subscription;
 
-  model!: NgbDateStruct;
+  /**
+   * Мапа для поиска идентификатора счёта по его имени и буквенному коду валюты
+   * @private
+   */
+  private _accountsMap: Map<string, number> = new Map<string, number>();
 
   constructor(private currencyService: CurrencyService,
               private categoryService: CategoryService,
@@ -71,7 +75,7 @@ export class OperationInputComponent implements OnInit {
     this.operationInputForm = this.fb.group({
       amount: "0",
       currencyCode: "",
-      accountId: "0",
+      accountName: "",
       categoryId: "0",
       description: "",
       date: this.today,
@@ -106,23 +110,36 @@ export class OperationInputComponent implements OnInit {
     return this.dateAdapter.toModel(this.ngbCalendar.getToday())!;
   }
 
-  private _loadAccounts() {
-    this.userAccounts = this.accountService.getUsersAccounts().pipe(
-      tap(userAccounts => {
-        this.userAccountsLoaded = true;
-        this._isLoaded();
+  operationInputSave() {
+    this.saveButtonDisabled = true;
+    let value = this.operationInputForm.value;
+    value.date = this._computeDateAndTime(value);
+    value.accountId = this._computeAccountId();
+    const operation: OperationCreate = <OperationCreate>value;
+    switch (this.operationType) {
+      case OperationTypeEnum.EXPENSE:
+        this._createExpense(operation);
+        break;
+      case OperationTypeEnum.INCOME:
+        this._createIncome(operation);
+        break;
+      default:
+        throw new Error("Incorrect operation type. Must be OperationTypeEnum.EXPENSE or OperationTypeEnum.INCOME");
+    }
+  }
 
-        this.settingService.findByName(this.lastAccountSettingName).subscribe(setting => {
-          if (setting?.value) {
-            this.selectedAccount = userAccounts.filter(account => account.id == Number.parseInt(setting.value))[0];
-          } else {
-            this.selectedAccount = userAccounts[0];
-          }
-          this.lastAccountLoaded = true;
-          this._isLoaded();
-        })
-      })
-    );
+  private _computeAccountId(): number {
+    let accountId: number = 0;
+    const rawValue = this.operationInputForm.getRawValue();
+    accountId = this._accountsMap.get(this._accountsHashCode2(rawValue.accountName, rawValue.currencyCode)) ?? 0;
+    return accountId;
+  }
+
+  private _accountsHashCode(account: Account): string {
+    if (!account?.name || !account.currency || !account.currency.code)
+      return "";
+
+    return this._accountsHashCode2(account.name, account.currency.code);
   }
 
   private _loadCategories() {
@@ -182,37 +199,39 @@ export class OperationInputComponent implements OnInit {
     }
   }
 
-  private _isLoaded(): void {
-    this.operationInputForm.patchValue({
-      currencyCode: this.selectedCurrency.code,
-    });
-    this.operationInputForm.patchValue({
-      categoryId: this.selectedCategory.id,
-    });
-    this.operationInputForm.patchValue({
-      accountId: this.selectedAccount.id
-    });
-    const result = this.userCategoriesLoaded && this.userCurrenciesLoaded && this.userAccountsLoaded &&
-    this.lastCategoryLoaded && this.lastCurrencyLoaded && this.lastAccountLoaded;
-    this.loadedEvent.emit(result);
+  private _accountsHashCode2(accountName: string, currencyCode: string): string {
+    if (!accountName || !currencyCode)
+      return "";
+
+    return accountName + '_' + currencyCode;
   }
 
-  operationInputSave() {
-    this.saveButtonDisabled = true;
-    let value = this.operationInputForm.value;
-    value.date = this._computeDateAndTime(value);
+  private _loadAccounts() {
+    let subscription1 = this.accountService.getUsersAccounts().pipe(
+      tap(userAccounts => {
+        this._accountsMap.clear();
+        userAccounts.forEach(account => {
+          this._accountsMap.set(this._accountsHashCode(account), account.id);
+        });
+        this.userAccountNames = [...new Set<string>(userAccounts.map(account => account.name))];
+        this.userAccountsLoaded = true;
+        this._isLoaded();
 
-    const operation: OperationCreate = <OperationCreate>value;
-    switch (this.operationType) {
-      case OperationTypeEnum.EXPENSE:
-        this._createExpense(operation);
-        break;
-      case OperationTypeEnum.INCOME:
-        this._createIncome(operation);
-        break;
-      default:
-        throw new Error("Incorrect operation type. Must be OperationTypeEnum.EXPENSE or OperationTypeEnum.INCOME");
-    }
+        this.settingService.findByName(this.lastAccountSettingName).subscribe(setting => {
+          if (setting?.value) {
+            this.selectedAccountName = userAccounts.filter(account => account.id == Number.parseInt(setting.value))[0].name;
+          } else {
+            this.selectedAccountName = userAccounts[0].name;
+          }
+          this.lastAccountLoaded = true;
+          this._isLoaded();
+        })
+      })
+    ).subscribe({
+      complete: () => {
+        subscription1?.unsubscribe();
+      }
+    });
   }
 
   /**
@@ -302,5 +321,20 @@ export class OperationInputComponent implements OnInit {
     this.settingService.save({name: this.lastAccountSettingName, value: accountId.toString()})
       .subscribe(() => {
       });
+  }
+
+  private _isLoaded(): void {
+    this.operationInputForm.patchValue({
+      currencyCode: this.selectedCurrency.code,
+    });
+    this.operationInputForm.patchValue({
+      categoryId: this.selectedCategory.id,
+    });
+    this.operationInputForm.patchValue({
+      accountName: this.selectedAccountName
+    });
+    const result = this.userCategoriesLoaded && this.userCurrenciesLoaded && this.userAccountsLoaded &&
+    this.lastCategoryLoaded && this.lastCurrencyLoaded && this.lastAccountLoaded;
+    this.loadedEvent.emit(result);
   }
 }
