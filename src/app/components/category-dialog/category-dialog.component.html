@@ -29,7 +29,7 @@
   <button type="button" class="btn btn-outline-dark" [disabled]="submitButtonDisabled" (click)="createCategory()"
           *ngIf="mode === dialogMode.ADD">Создать
   </button>
-  <button type="button" class="btn btn-outline-dark" [disabled]="submitButtonDisabled" (click)="createCategory()"
+  <button type="button" class="btn btn-outline-dark" [disabled]="submitButtonDisabled" (click)="updateCategory()"
           *ngIf="mode === dialogMode.EDIT">Сохранить
   </button>
   <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss('Close click')">Отменить</button>
