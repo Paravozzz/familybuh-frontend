@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Account} from "../interfaces/Account";
+import {AccountSummary} from "../interfaces/AccountSummary";
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +17,9 @@ export class AccountService {
       .get<Account[]>("/api/user/accounts", {withCredentials: true});
   }
 
-  public getUsersAccount(id: number): Observable<Account> {
+  public getUsersAccountSummaries(): Observable<AccountSummary[]> {
     return this.http
-      .get<Account>("/api/user/account/" + id, {withCredentials: true});
+      .get<AccountSummary[]>("/api/user/account-summaries", {withCredentials: true});
   }
 
 }
