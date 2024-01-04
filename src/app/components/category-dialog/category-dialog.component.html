@@ -3,6 +3,7 @@
   <h4 class="modal-title" *ngIf="mode === dialogMode.EDIT">Редактировать категорию</h4>
 </div>
 <div class="modal-body">
+  <app-spinner [condition]="!formReady"/>
   <form [formGroup]="categoryControlGroup" class="category-form" *ngIf="formReady">
     <input type="hidden" formControlName="id">
     <div class="form-floating mb-3">
@@ -17,20 +18,13 @@
       <label for="categoryType" class="form-label">Тип категории</label>
     </div>
   </form>
-  <div *ngIf="!formReady">
-    <div class="d-flex justify-content-center">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div>
-  </div>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-outline-dark" [disabled]="submitButtonDisabled" (click)="createCategory()"
+  <button type="button" class="btn btn-outline-primary" [disabled]="submitButtonDisabled" (click)="createCategory()"
           *ngIf="mode === dialogMode.ADD">Создать
   </button>
-  <button type="button" class="btn btn-outline-dark" [disabled]="submitButtonDisabled" (click)="updateCategory()"
+  <button type="button" class="btn btn-outline-primary" [disabled]="submitButtonDisabled" (click)="updateCategory()"
           *ngIf="mode === dialogMode.EDIT">Сохранить
   </button>
-  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss('Close click')">Отменить</button>
+  <button type="button" class="btn btn-outline-primary" (click)="activeModal.dismiss('Close click')">Отменить</button>
 </div>

@@ -3,6 +3,7 @@
   <h4 class="modal-title" *ngIf="mode === dialogMode.EDIT">Редактировать счёт</h4>
 </div>
 <div class="modal-body">
+  <app-spinner [condition]="!formReady"/>
   <form [formGroup]="formGroup" class="category-form" *ngIf="formReady">
     <div class="form-floating mb-3">
       <input type="text" class="form-control" id="accountName" formControlName="name" placeholder="">
@@ -20,14 +21,13 @@
       </div>
     </div>
   </form>
-  <app-spinner [condition]="!formReady"/>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-outline-dark" [disabled]="submitButtonDisabled" (click)="createAccount()"
+  <button type="button" class="btn btn-outline-primary" [disabled]="submitButtonDisabled" (click)="createAccount()"
           *ngIf="mode === dialogMode.ADD">Создать
   </button>
-  <button type="button" class="btn btn-outline-dark" [disabled]="submitButtonDisabled" (click)="updateAccount()"
+  <button type="button" class="btn btn-outline-primary" [disabled]="submitButtonDisabled" (click)="updateAccount()"
           *ngIf="mode === dialogMode.EDIT">Сохранить
   </button>
-  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss('Close click')">Отменить</button>
+  <button type="button" class="btn btn-outline-primary" (click)="activeModal.dismiss('Close click')">Отменить</button>
 </div>
