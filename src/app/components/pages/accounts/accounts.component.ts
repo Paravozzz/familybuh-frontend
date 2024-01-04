@@ -2,6 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {AccountSummary} from "../../../interfaces/AccountSummary";
 import {AccountService} from "../../../service/account.service";
 import {tap} from "rxjs";
+import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {AddEditDialogMode} from "../../../enums/AddEditDialogMode";
+import {AccountDialogComponent} from "../../account-dialog/account-dialog.component";
 
 @Component({
   selector: 'app-accounts',
@@ -12,7 +15,7 @@ export class AccountsComponent implements OnInit {
   userAccountsLoaded: boolean = false;
   userAccountSummaries: AccountSummary[] = [];
 
-  constructor(private accountService: AccountService) {
+  constructor(private modalService: NgbModal, private accountService: AccountService) {
   }
 
   ngOnInit(): void {
@@ -20,11 +23,33 @@ export class AccountsComponent implements OnInit {
   }
 
   openAddDialog() {
-
+    const modalRef: NgbModalRef = this.modalService.open(AccountDialogComponent, {
+      centered: true,
+      backdrop: "static",
+      keyboard: false
+    });
+    modalRef.componentInstance.mode = AddEditDialogMode.ADD;
+    modalRef.closed.subscribe({
+      next: value => {
+        this._fetchAccounts();
+      }
+    })
   }
 
-  openEditDialog(accountSummary: AccountSummary) {
+  openEditDialog(accountId: number) {
+    const modalRef: NgbModalRef = this.modalService.open(AccountDialogComponent, {
+      centered: true,
+      backdrop: "static",
+      keyboard: false
+    });
+    modalRef.componentInstance.mode = AddEditDialogMode.EDIT;
+    modalRef.componentInstance.accountId = accountId;
 
+    modalRef.closed.subscribe({
+      next: value => {
+        this._fetchAccounts();
+      }
+    })
   }
 
   private _fetchAccounts() {

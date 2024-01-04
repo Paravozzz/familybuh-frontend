@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {CategoryService} from "../../../service/category.service";
 import {Category} from "../../../interfaces/Category";
 import {Observable, tap} from "rxjs";
-import {CategoriesAddEditDialogMode} from "../../../enums/CategoriesAddEditDialogMode";
+import {AddEditDialogMode} from "../../../enums/AddEditDialogMode";
 import {CategoryDialogComponent} from "../../category-dialog/category-dialog.component";
 import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 
@@ -38,7 +38,7 @@ export class CategoriesComponent implements OnInit {
 
   openAddDialog() {
     const modalRef: NgbModalRef = this.modalService.open(CategoryDialogComponent, {centered: true, backdrop: "static", keyboard:false});
-    modalRef.componentInstance.mode = CategoriesAddEditDialogMode.ADD;
+    modalRef.componentInstance.mode = AddEditDialogMode.ADD;
     modalRef.closed.subscribe({
       next: value => {
         this.userCategories = this._fetchCategories();
@@ -48,7 +48,7 @@ export class CategoriesComponent implements OnInit {
 
   openEditDialog(categoryId: number) {
     const modalRef: NgbModalRef = this.modalService.open(CategoryDialogComponent, {centered: true, backdrop: "static", keyboard:false});
-    modalRef.componentInstance.mode = CategoriesAddEditDialogMode.EDIT;
+    modalRef.componentInstance.mode = AddEditDialogMode.EDIT;
     modalRef.componentInstance.categoryId = categoryId;
 
     modalRef.closed.subscribe({

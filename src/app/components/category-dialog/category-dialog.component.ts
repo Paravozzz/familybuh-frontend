@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {CategoriesAddEditDialogMode} from "../../enums/CategoriesAddEditDialogMode";
+import {AddEditDialogMode} from "../../enums/AddEditDialogMode";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {CategoryService} from "../../service/category.service";
 import {Category} from "../../interfaces/Category";
@@ -11,9 +11,9 @@ import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
   styleUrls: ['./category-dialog.component.css']
 })
 export class CategoryDialogComponent implements OnInit {
-  @Input() mode!: CategoriesAddEditDialogMode;
+  @Input() mode!: AddEditDialogMode;
   @Input() categoryId!: any;
-  dialogMode = CategoriesAddEditDialogMode;
+  dialogMode = AddEditDialogMode;
   categoryControlGroup!: FormGroup<any>;
   formReady: boolean = false;
   submitButtonDisabled: boolean = false;
@@ -25,14 +25,14 @@ export class CategoryDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.mode === CategoriesAddEditDialogMode.ADD) {
+    if (this.mode === AddEditDialogMode.ADD) {
       this.categoryControlGroup = this.fb.group({
         id: 0,
         name: '',
         isIncome: 'false'
       });
       this.formReady = true;
-    } else if (this.mode === CategoriesAddEditDialogMode.EDIT && this.categoryId) {
+    } else if (this.mode === AddEditDialogMode.EDIT && this.categoryId) {
       this.categoryService.findById(this.categoryId)
         .subscribe({
           next: value => {

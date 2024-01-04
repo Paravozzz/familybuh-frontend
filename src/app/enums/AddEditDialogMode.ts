@@ -1,4 +1,4 @@
-export enum CategoriesAddEditDialogMode {
+export enum AddEditDialogMode {
   /**
    * Добавление новой категории
    */

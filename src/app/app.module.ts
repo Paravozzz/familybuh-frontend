@@ -20,6 +20,7 @@ import {OperationInputComponent} from './components/operation-input/operation-in
 import { OperationWigetComponent } from './components/operation-wiget/operation-wiget.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SpinnerComponent } from './components/shared/spinner/spinner.component';
+import { AccountDialogComponent } from './components/account-dialog/account-dialog.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { SpinnerComponent } from './components/shared/spinner/spinner.component'
     CategoryDialogComponent,
     OperationInputComponent,
     OperationWigetComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    AccountDialogComponent
   ],
   imports: [
     BrowserModule,

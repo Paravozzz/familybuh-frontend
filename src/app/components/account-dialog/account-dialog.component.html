@@ -1,0 +1,26 @@
+<div class="modal-header">
+  <h4 class="modal-title" *ngIf="mode === dialogMode.ADD">Новая категория</h4>
+  <h4 class="modal-title" *ngIf="mode === dialogMode.EDIT">Редактировать категорию</h4>
+</div>
+<div class="modal-body">
+  <form [formGroup]="formGroup" class="category-form" *ngIf="formReady">
+    <div class="mb-3">
+      <label for="categoryName" class="form-label">Наименование счёта:</label>
+      <input type="text" class="form-control" id="categoryName" formControlName="name">
+    </div>
+    <div class="mb-3">
+      <label for="categoryDescription" class="form-label">Описание счёта:</label>
+      <input type="text" class="form-control" id="categoryDescription" formControlName="description">
+    </div>
+  </form>
+  <app-spinner [condition]="!formReady"/>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" [disabled]="submitButtonDisabled" (click)="createAccount()"
+          *ngIf="mode === dialogMode.ADD">Создать
+  </button>
+  <button type="button" class="btn btn-outline-dark" [disabled]="submitButtonDisabled" (click)="updateAccount()"
+          *ngIf="mode === dialogMode.EDIT">Сохранить
+  </button>
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss('Close click')">Отменить</button>
+</div>

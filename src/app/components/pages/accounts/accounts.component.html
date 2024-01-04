@@ -7,6 +7,6 @@
     <div *ngFor="let initialBalance of accountSummary.initialBalance">
       {{initialBalance.amount}} {{initialBalance.currencyCode}}
     </div>
-    <button type="button" class="btn btn-link" (click)="openEditDialog(accountSummary)">Изменить</button>
+    <button type="button" class="btn btn-link" (click)="openEditDialog(accountSummary.initialBalance[0].accountId)">Изменить</button>
   </div>
 </div>

@@ -17,9 +17,21 @@ export class AccountService {
       .get<Account[]>("/api/user/accounts", {withCredentials: true});
   }
 
+  /**
+   * Получение обобщённой информации по счётам пользователя
+   */
   public getUsersAccountSummaries(): Observable<AccountSummary[]> {
     return this.http
       .get<AccountSummary[]>("/api/user/account-summaries", {withCredentials: true});
+  }
+
+  /**
+   * Поиск обобщённой информации по счёту по одному из идентификаторов
+   * @param accountId идентификатор счёта
+   */
+  public findUserAccountSummaryByAccountId(accountId: number): Observable<AccountSummary> {
+    return this.http
+      .get<AccountSummary>("/api/user/account-summary/"+accountId, {withCredentials: true});
   }
 
 }
