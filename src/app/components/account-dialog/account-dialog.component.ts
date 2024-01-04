@@ -4,6 +4,8 @@ import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 import {AccountService} from "../../service/account.service";
 import {CurrencyService} from "../../service/currency.service";
+import {AccountCreate} from "../../interfaces/AccountCreate";
+import {AccountUpdate} from "../../interfaces/AccountUpdate";
 
 @Component({
   selector: 'app-account-dialog',
@@ -79,10 +81,36 @@ export class AccountDialogComponent implements OnInit {
 
 
   createAccount() {
-
+    this.submitButtonDisabled = true;
+    const accountCreate: AccountCreate = this.formGroup.getRawValue();
+    this.accountService.create(accountCreate)
+      .subscribe({
+        next: value => {
+          this.activeModal.close(value);
+        },
+        error: err => {
+          this.submitButtonDisabled = false;
+          console.error(err);
+        }, complete: () => {
+          this.submitButtonDisabled = false;
+        }
+      })
   }
 
   updateAccount() {
-
+    this.submitButtonDisabled = true;
+    const accountUpdate: AccountUpdate = this.formGroup.getRawValue();
+    this.accountService.update(accountUpdate)
+      .subscribe({
+        next: value => {
+          this.activeModal.close(value);
+        },
+        error: err => {
+          this.submitButtonDisabled = false;
+          console.error(err);
+        }, complete: () => {
+          this.submitButtonDisabled = false;
+        }
+      })
   }
 }
