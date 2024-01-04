@@ -5,16 +5,16 @@
 <div class="modal-body">
   <form [formGroup]="categoryControlGroup" class="category-form" *ngIf="formReady">
     <input type="hidden" formControlName="id">
-    <div class="mb-3">
-      <label for="categoryName" class="form-label">Наименование категории:</label>
-      <input type="text" class="form-control" id="categoryName" formControlName="name">
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="categoryName" formControlName="name" placeholder="">
+      <label for="categoryName" class="form-label">Наименование категории</label>
     </div>
-    <div>
-      <label for="categoryType" class="form-label">Тип категории:</label>
+    <div class="form-floating">
       <select class="form-select" aria-label="Default select example" formControlName="isIncome" id="categoryType">
         <option value="false">Расход</option>
         <option value="true">Доход</option>
       </select>
+      <label for="categoryType" class="form-label">Тип категории</label>
     </div>
   </form>
   <div *ngIf="!formReady">

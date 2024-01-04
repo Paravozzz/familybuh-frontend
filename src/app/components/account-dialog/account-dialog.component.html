@@ -1,16 +1,23 @@
 <div class="modal-header">
-  <h4 class="modal-title" *ngIf="mode === dialogMode.ADD">Новая категория</h4>
-  <h4 class="modal-title" *ngIf="mode === dialogMode.EDIT">Редактировать категорию</h4>
+  <h4 class="modal-title" *ngIf="mode === dialogMode.ADD">Новый счёт</h4>
+  <h4 class="modal-title" *ngIf="mode === dialogMode.EDIT">Редактировать счёт</h4>
 </div>
 <div class="modal-body">
   <form [formGroup]="formGroup" class="category-form" *ngIf="formReady">
-    <div class="mb-3">
-      <label for="categoryName" class="form-label">Наименование счёта:</label>
-      <input type="text" class="form-control" id="categoryName" formControlName="name">
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="accountName" formControlName="name" placeholder="">
+      <label for="accountName">Наименование счёта</label>
     </div>
-    <div class="mb-3">
-      <label for="categoryDescription" class="form-label">Описание счёта:</label>
-      <input type="text" class="form-control" id="categoryDescription" formControlName="description">
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="accountDescription" formControlName="description" placeholder="">
+      <label for="accountDescription">Описание счёта</label>
+    </div>
+    <div formArrayName="initialBalance">
+      <p>Начальный баланс:</p>
+      <div class="form-floating mb-3" *ngFor="let ctrl of initialBalance.controls; let i=index" [formGroupName]="i">
+        <input type="text" class="form-control" id="initialBalance-{{i}}" formControlName="amount" placeholder="">
+        <label for="initialBalance-{{i}}">{{ctrl.get('currencyCode')?.value ?? 'XXX'}}</label>
+      </div>
     </div>
   </form>
   <app-spinner [condition]="!formReady"/>
