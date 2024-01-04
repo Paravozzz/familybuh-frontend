@@ -63,6 +63,7 @@ export class CategoryDialogComponent implements OnInit {
           this.activeModal.close(value);
         },
         error: err => {
+          this.submitButtonDisabled = false;
           console.error(err);
         }, complete: () => {
           this.submitButtonDisabled = false;
@@ -79,6 +80,7 @@ export class CategoryDialogComponent implements OnInit {
           this.activeModal.close(value);
         },
         error: err => {
+          this.submitButtonDisabled = false;
           console.error(err);
         }, complete: () => {
           this.submitButtonDisabled = false;
