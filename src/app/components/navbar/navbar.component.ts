@@ -1,17 +1,31 @@
-import {Component, ElementRef, EventEmitter, Output, Renderer2, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, OnInit, Output, Renderer2, ViewChild} from '@angular/core';
 import {ButtonNameEnum} from "src/app/enums/ButtonNameEnum";
+import {KeycloakService} from "keycloak-angular";
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit{
   @Output("activeButton") activeButtonEvent = new EventEmitter<ButtonNameEnum>();
   @ViewChild("navButtons") navButtons!: ElementRef;
   eButtonName = ButtonNameEnum;
+  username : string = '';
+  emailVerified: boolean = false;
+  constructor(private render: Renderer2, private keycloakService: KeycloakService) {
+  }
 
-  constructor(private render: Renderer2) {
+  ngOnInit(): void {
+    this.keycloakService.loadUserProfile().then(
+      (profile) => {
+        console.log(profile);
+        this.username = profile.email ?? '';
+        this.emailVerified = profile.emailVerified ?? true;
+      }
+    ).catch((err)=>{
+      console.error(err);
+    });
   }
 
   navButtonClick($event: MouseEvent, buttonName: ButtonNameEnum) {

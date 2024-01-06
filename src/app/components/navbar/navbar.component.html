@@ -6,12 +6,18 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav" #navButtons>
+      <div class="navbar-nav  me-auto" #navButtons>
         <a class="nav-link active" href="#" (click)="navButtonClick($event,eButtonName.EXPENSES)">Расходы</a>
         <a class="nav-link" href="#" (click)="navButtonClick($event, eButtonName.INCOMES)">Доходы</a>
         <a class="nav-link" href="#" (click)="navButtonClick($event, eButtonName.CATEGORIES)">Категории</a>
         <a class="nav-link" href="#" (click)="navButtonClick($event, eButtonName.ACCOUNTS)">Счета</a>
         <a class="nav-link" href="#" (click)="navButtonClick($event, eButtonName.CURRENCIES)">Валюты</a>
+      </div>
+      <div class="navbar-text text-light">
+        {{username}}
+      </div>
+      <div *ngIf="!emailVerified" class="navbar-text text-warning">
+        (!)
       </div>
     </div>
   </div>
