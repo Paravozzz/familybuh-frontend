@@ -20,7 +20,7 @@ export class AccountService {
   }
 
   /**
-   * Получение обобщённой информации по счётам пользователя
+   * Получение обобщённой информации по счётам пользователя и его семьи
    */
   public getUsersAccountSummaries(): Observable<AccountSummary[]> {
     return this.http

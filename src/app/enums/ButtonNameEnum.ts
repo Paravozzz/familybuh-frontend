@@ -3,5 +3,7 @@ export enum ButtonNameEnum {
   EXPENSES = 'РАСХОДЫ',
   CATEGORIES = 'КАТЕГОРИИ',
   ACCOUNTS = 'СЧЕТА',
-  CURRENCIES = 'ВАЛЮТЫ'
+  CURRENCIES = 'ВАЛЮТЫ',
+  TRANSFERS = 'ПЕРЕМЕЩЕНИЯ',
+  EXCHANGES = 'ОБМЕНЫ_ВАЛЮТ'
 }

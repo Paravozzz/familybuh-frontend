@@ -21,6 +21,8 @@ import { OperationWigetComponent } from './components/operation-wiget/operation-
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SpinnerComponent } from './components/shared/spinner/spinner.component';
 import { AccountDialogComponent } from './components/account-dialog/account-dialog.component';
+import { TransfersComponent } from './components/pages/transfers/transfers.component';
+import { ExchangesComponent } from './components/pages/exchanges/exchanges.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import { AccountDialogComponent } from './components/account-dialog/account-dial
     OperationInputComponent,
     OperationWigetComponent,
     SpinnerComponent,
-    AccountDialogComponent
+    AccountDialogComponent,
+    TransfersComponent,
+    ExchangesComponent
   ],
   imports: [
     BrowserModule,

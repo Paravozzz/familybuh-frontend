@@ -19,7 +19,6 @@ export class NavbarComponent implements OnInit{
   ngOnInit(): void {
     this.keycloakService.loadUserProfile().then(
       (profile) => {
-        console.log(profile);
         this.username = profile.email ?? '';
         this.emailVerified = profile.emailVerified ?? true;
       }
