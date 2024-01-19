@@ -15,14 +15,18 @@ import {CategoriesComponent} from './components/pages/categories/categories.comp
 import {CurrenciesComponent} from "./components/pages/currencies/currencies.component";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {InitDialogComponent} from './components/init/init-dialog/init-dialog.component';
-import {CategoryDialogComponent} from "./components/category-dialog/category-dialog.component";
-import {OperationInputComponent} from './components/operation-input/operation-input.component';
-import { OperationWigetComponent } from './components/operation-wiget/operation-wiget.component';
+import {CategoryDialogComponent} from "./components/modals/category-dialog/category-dialog.component";
+import {OperationInputComponent} from './components/inputs/operation-input/operation-input.component';
+import { OperationWigetComponent } from './components/wigets/operation-wiget/operation-wiget.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SpinnerComponent } from './components/shared/spinner/spinner.component';
-import { AccountDialogComponent } from './components/account-dialog/account-dialog.component';
+import { AccountDialogComponent } from './components/modals/account-dialog/account-dialog.component';
 import { TransfersComponent } from './components/pages/transfers/transfers.component';
 import { ExchangesComponent } from './components/pages/exchanges/exchanges.component';
+import { TransferInputComponent } from './components/inputs/transfer-input/transfer-input.component';
+import { ExchangeInputComponent } from './components/inputs/exchange-input/exchange-input.component';
+import { TransferWigetComponent } from './components/wigets/transfer-wiget/transfer-wiget.component';
+import { ExchangeWigetComponent } from './components/wigets/exchange-wiget/exchange-wiget.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +44,11 @@ import { ExchangesComponent } from './components/pages/exchanges/exchanges.compo
     SpinnerComponent,
     AccountDialogComponent,
     TransfersComponent,
-    ExchangesComponent
+    ExchangesComponent,
+    TransferInputComponent,
+    ExchangeInputComponent,
+    TransferWigetComponent,
+    ExchangeWigetComponent
   ],
   imports: [
     BrowserModule,

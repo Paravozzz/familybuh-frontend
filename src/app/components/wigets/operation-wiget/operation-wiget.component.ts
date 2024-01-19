@@ -1,8 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {OperationService} from "../../service/operation.service";
+import {OperationService} from "../../../service/operation.service";
 import {Observable} from "rxjs";
-import {OperationDto} from "../../interfaces/OperationDto";
-import {OperationTypeEnum} from "../../enums/OperationTypeEnum";
+import {OperationDto} from "../../../interfaces/OperationDto";
+import {OperationTypeEnum} from "../../../enums/OperationTypeEnum";
 import * as _moment from 'moment';
 import {default as _rollupMoment} from 'moment';
 

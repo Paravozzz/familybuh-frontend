@@ -1,8 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {AddEditDialogMode} from "../../enums/AddEditDialogMode";
+import {AddEditDialogMode} from "../../../enums/AddEditDialogMode";
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {CategoryService} from "../../service/category.service";
-import {Category} from "../../interfaces/Category";
+import {CategoryService} from "../../../service/category.service";
+import {Category} from "../../../interfaces/Category";
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({

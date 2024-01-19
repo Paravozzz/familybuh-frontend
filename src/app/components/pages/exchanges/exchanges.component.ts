@@ -6,5 +6,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./exchanges.component.css']
 })
 export class ExchangesComponent {
+  exchangeInputLoaded: boolean = false;
 
 }

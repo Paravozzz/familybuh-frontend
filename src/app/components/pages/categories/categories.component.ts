@@ -3,7 +3,7 @@ import {CategoryService} from "../../../service/category.service";
 import {Category} from "../../../interfaces/Category";
 import {Observable, tap} from "rxjs";
 import {AddEditDialogMode} from "../../../enums/AddEditDialogMode";
-import {CategoryDialogComponent} from "../../category-dialog/category-dialog.component";
+import {CategoryDialogComponent} from "../../modals/category-dialog/category-dialog.component";
 import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({

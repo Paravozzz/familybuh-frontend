@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-transfers',
@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./transfers.component.css']
 })
 export class TransfersComponent {
+
+  transferInputLoaded: boolean = false;
 
 }

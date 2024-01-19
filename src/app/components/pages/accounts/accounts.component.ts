@@ -4,7 +4,7 @@ import {AccountService} from "../../../service/account.service";
 import {tap} from "rxjs";
 import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 import {AddEditDialogMode} from "../../../enums/AddEditDialogMode";
-import {AccountDialogComponent} from "../../account-dialog/account-dialog.component";
+import {AccountDialogComponent} from "../../modals/account-dialog/account-dialog.component";
 
 @Component({
   selector: 'app-accounts',

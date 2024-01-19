@@ -1,11 +1,11 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {AddEditDialogMode} from "../../enums/AddEditDialogMode";
+import {AddEditDialogMode} from "../../../enums/AddEditDialogMode";
 import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
-import {AccountService} from "../../service/account.service";
-import {CurrencyService} from "../../service/currency.service";
-import {AccountCreate} from "../../interfaces/AccountCreate";
-import {AccountUpdate} from "../../interfaces/AccountUpdate";
+import {AccountService} from "../../../service/account.service";
+import {CurrencyService} from "../../../service/currency.service";
+import {AccountCreate} from "../../../interfaces/AccountCreate";
+import {AccountUpdate} from "../../../interfaces/AccountUpdate";
 
 @Component({
   selector: 'app-account-dialog',
