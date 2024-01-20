@@ -49,4 +49,18 @@ export class AccountService {
   public update(accountUpdate: AccountUpdate): Observable<AccountSummary> {
     return this.http.put<AccountSummary>("/api/user/account", accountUpdate, {withCredentials: true});
   }
+
+  public accountsHashCode(account: Account): string {
+    if (!account?.name || !account.currency || !account.currency.code)
+      return "";
+
+    return this.accountsHashCode2(account.name, account.currency.code);
+  }
+
+  public accountsHashCode2(accountName: string, currencyCode: string): string {
+    if (!accountName || !currencyCode)
+      return "";
+
+    return accountName + '_' + currencyCode;
+  }
 }

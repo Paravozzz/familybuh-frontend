@@ -4,7 +4,6 @@ import {CurrencyService} from "../../../service/currency.service";
 import {map, Observable, Subscription, tap} from "rxjs";
 import {Category} from "../../../interfaces/Category";
 import {CategoryService} from "../../../service/category.service";
-import {Account} from "../../../interfaces/Account";
 import {AccountService} from "../../../service/account.service";
 import {OperationTypeEnum} from "../../../enums/OperationTypeEnum";
 import {SettingService} from "../../../service/setting.service";
@@ -12,9 +11,9 @@ import {environment} from "../../../../environments/environment";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {OperationCreate} from "../../../interfaces/OperationCreate";
 import {OperationService} from "../../../service/operation.service";
+import {DateService} from "../../../service/date.service";
 import * as _moment from 'moment';
 import {default as _rollupMoment} from 'moment';
-import {NgbCalendar, NgbDateAdapter} from "@ng-bootstrap/ng-bootstrap";
 
 const moment = _rollupMoment || _moment;
 
@@ -70,15 +69,14 @@ export class OperationInputComponent implements OnInit {
               private settingService: SettingService,
               private operationService: OperationService,
               private fb: FormBuilder,
-              private ngbCalendar: NgbCalendar,
-              private dateAdapter: NgbDateAdapter<string>) {
+              private dateService: DateService) {
     this.operationInputForm = this.fb.group({
       amount: "0",
       currencyCode: "",
       accountName: "",
       categoryId: "0",
       description: "",
-      date: this.today,
+      date: dateService.today,
       hour: "",
       minute: ""
     });
@@ -106,15 +104,11 @@ export class OperationInputComponent implements OnInit {
     this._loadAccounts();
   }
 
-  get today() {
-    return this.dateAdapter.toModel(this.ngbCalendar.getToday())!;
-  }
-
   operationInputSave() {
     this.saveButtonDisabled = true;
     let value = this.operationInputForm.value;
-    value.date = this._computeDateAndTime(value);
-    value.accountId = this._computeAccountId();
+    value.date = this.dateService.computeDateAndTime(value);
+    value.accountId = this._computeAccountId(this.operationInputForm.getRawValue());
     const operation: OperationCreate = <OperationCreate>value;
     switch (this.operationType) {
       case OperationTypeEnum.EXPENSE:
@@ -126,20 +120,6 @@ export class OperationInputComponent implements OnInit {
       default:
         throw new Error("Incorrect operation type. Must be OperationTypeEnum.EXPENSE or OperationTypeEnum.INCOME");
     }
-  }
-
-  private _computeAccountId(): number {
-    let accountId: number = 0;
-    const rawValue = this.operationInputForm.getRawValue();
-    accountId = this._accountsMap.get(this._accountsHashCode2(rawValue.accountName, rawValue.currencyCode)) ?? 0;
-    return accountId;
-  }
-
-  private _accountsHashCode(account: Account): string {
-    if (!account?.name || !account.currency || !account.currency.code)
-      return "";
-
-    return this._accountsHashCode2(account.name, account.currency.code);
   }
 
   private _loadCategories() {
@@ -185,25 +165,18 @@ export class OperationInputComponent implements OnInit {
   private _initConstants() {
     switch (this.operationType) {
       case OperationTypeEnum.EXPENSE:
-        this.lastCurrencySettingName = environment.constants.last_exp_currency;
-        this.lastAccountSettingName = environment.constants.last_exp_account;
-        this.lastCategorySettingName = environment.constants.last_exp_category;
+        this.lastCurrencySettingName = environment.constants.last_expense_currency;
+        this.lastAccountSettingName = environment.constants.last_expense_account_id;
+        this.lastCategorySettingName = environment.constants.last_expense_category_id;
         break;
       case OperationTypeEnum.INCOME:
-        this.lastCurrencySettingName = environment.constants.last_inc_currency;
-        this.lastAccountSettingName = environment.constants.last_inc_account;
-        this.lastCategorySettingName = environment.constants.last_inc_category;
+        this.lastCurrencySettingName = environment.constants.last_income_currency;
+        this.lastAccountSettingName = environment.constants.last_income_account_id;
+        this.lastCategorySettingName = environment.constants.last_income_category_id;
         break;
       default:
         throw new Error("Incorrect operation type. Must be OperationTypeEnum.EXPENSE or OperationTypeEnum.INCOME");
     }
-  }
-
-  private _accountsHashCode2(accountName: string, currencyCode: string): string {
-    if (!accountName || !currencyCode)
-      return "";
-
-    return accountName + '_' + currencyCode;
   }
 
   private _loadAccounts() {
@@ -211,7 +184,7 @@ export class OperationInputComponent implements OnInit {
       tap(userAccounts => {
         this._accountsMap.clear();
         userAccounts.forEach(account => {
-          this._accountsMap.set(this._accountsHashCode(account), account.id);
+          this._accountsMap.set(this.accountService.accountsHashCode(account), account.id);
         });
         this.userAccountNames = [...new Set<string>(userAccounts.map(account => account.name))];
         this.userAccountsLoaded = true;
@@ -234,49 +207,10 @@ export class OperationInputComponent implements OnInit {
     });
   }
 
-  /**
-   * Если пользователем заданы ЧЧ и ММ, то берём пользовательское время, если нет, то текущее.
-   * @param value
-   * @private
-   */
-  private _computeDateAndTime(value: any): string {
-    let dateAndTime: _moment.Moment = moment();
-    try {
-      dateAndTime = moment(value.date.year+"-"+value.date.month+"-"+value.date.day); //пользовательская дата с формы
-    } catch {
-      //do nothing
-      console.log(dateAndTime);
-    }
-    //по-умолчанию текущее время
-    let time = moment();
-    let hh: number = time.hour();
-    let mm: number = time.minute();
-    let userTime: boolean = false;
-    //пробуем распарсить пользовательское время
-    try {
-      if (value?.hour && value?.minute) {
-        let hh_value = Number.parseInt(value.hour);
-        let mm_value = Number.parseInt(value.minute);
-        if (hh >= 0 && hh <= 23 && mm >= 0 && mm <= 59) {
-          hh = hh_value;
-          mm = mm_value;
-          userTime = true;
-        }
-      }
-    } catch {
-      //do nothing
-    }
-    dateAndTime.hour(hh);
-    dateAndTime.minute(mm);
-    if (userTime) { //если было установлено пользовательское время
-      dateAndTime.second(0);
-      dateAndTime.millisecond(0);
-    } else {
-      dateAndTime.second(time.second());
-      dateAndTime.millisecond(time.millisecond());
-    }
-
-    return dateAndTime.format();
+  private _computeAccountId(value: { accountName: string, currencyCode: string }): number {
+    let accountId: number = 0;
+    accountId = this._accountsMap.get(this.accountService.accountsHashCode2(value.accountName, value.currencyCode)) ?? 0;
+    return accountId;
   }
 
   private _createExpense(operation: OperationCreate) {

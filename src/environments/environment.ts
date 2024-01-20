@@ -10,12 +10,15 @@ export const environment = {
     clientId: 'familybuh-frontend',
   },
   constants: {
-    last_exp_currency: "last_exp_currency",
-    last_inc_currency: "last_inc_currency",
-    last_exp_account: "last_exp_account",
-    last_inc_account: "last_inc_account",
-    last_exp_category: "last_exp_category",
-    last_inc_category: "last_inc_category",
+    last_expense_currency: "last_expense_currency",
+    last_income_currency: "last_income_currency",
+    last_transfer_currency: "last_transfer_currency",
+    last_expense_account_id: "last_expense_account_id",
+    last_transfer_expense_account_id: "last_transfer_expense_account_id",
+    last_income_account_id: "last_income_account_id",
+    last_transfer_income_account_id: "last_transfer_income_account_id",
+    last_expense_category_id: "last_expense_category_id",
+    last_income_category_id: "last_income_category_id",
   }
 };
 

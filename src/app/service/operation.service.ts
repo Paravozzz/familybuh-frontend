@@ -15,17 +15,25 @@ export class OperationService {
   /**
    * Подписка на получение операций за день
    */
-  get dailyOperations() {
+  get dailyOperations(): Observable<OperationDto[]> {
     return this._dailyOperations.asObservable();
   }
 
   constructor(private http: HttpClient) {
   }
 
+  /**
+   * Создать расходную операцию
+   * @param operationCreate
+   */
   public expense(operationCreate: OperationCreate): Observable<OperationDto> {
     return this.http.post<OperationDto>("/api/user/operation/expense", operationCreate, {withCredentials: true});
   }
 
+  /**
+   * Создать доходную операцию
+   * @param operationCreate
+   */
   public income(operationCreate: OperationCreate): Observable<OperationDto> {
     return this.http.post<OperationDto>("/api/user/operation/income", operationCreate, {withCredentials: true});
   }

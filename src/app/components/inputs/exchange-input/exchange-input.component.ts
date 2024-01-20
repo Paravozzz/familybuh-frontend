@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 
 @Component({
   selector: 'app-exchange-input',
@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./exchange-input.component.css']
 })
 export class ExchangeInputComponent {
-
+  @Output("loaded") loadedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 }
