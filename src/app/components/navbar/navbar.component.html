@@ -7,13 +7,13 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav  me-auto" #navButtons>
-        <a class="nav-link active" href="#" (click)="navButtonClick($event,eButtonName.EXPENSES)">Расходы</a>
-        <a class="nav-link" href="#" (click)="navButtonClick($event, eButtonName.INCOMES)">Доходы</a>
-        <a class="nav-link" href="#" (click)="navButtonClick($event, eButtonName.CATEGORIES)">Категории</a>
-        <a class="nav-link" href="#" (click)="navButtonClick($event, eButtonName.ACCOUNTS)">Счета</a>
-        <a class="nav-link" href="#" (click)="navButtonClick($event, eButtonName.CURRENCIES)">Валюты</a>
-        <a class="nav-link" href="#" (click)="navButtonClick($event, eButtonName.TRANSFERS)">Перемещения</a>
-        <a class="nav-link" href="#" (click)="navButtonClick($event, eButtonName.EXCHANGES)">Обмены валют</a>
+        <a class="nav-link" routerLink="/expenses">Расходы</a>
+        <a class="nav-link" routerLink="/incomes">Доходы</a>
+        <a class="nav-link" routerLink="/transfers">Перемещения</a>
+        <a class="nav-link" routerLink="/exchanges">Обмены валют</a>
+        <a class="nav-link" routerLink="/categories">Категории</a>
+        <a class="nav-link" routerLink="/accounts">Счета</a>
+        <a class="nav-link" routerLink="/currencies">Валюты</a>
       </div>
       <div class="navbar-text text-light">
         {{username}}
