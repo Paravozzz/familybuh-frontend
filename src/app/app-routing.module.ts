@@ -8,13 +8,13 @@ import {AccountsComponent} from "./components/pages/accounts/accounts.component"
 import {CurrenciesComponent} from "./components/pages/currencies/currencies.component";
 import {TransfersComponent} from "./components/pages/transfers/transfers.component";
 import {ExchangesComponent} from "./components/pages/exchanges/exchanges.component";
+import {NotFoundComponent} from "./components/pages/not-found/not-found.component";
 
 const routes: Routes = [
   {
     path: "",
     pathMatch: "full",
-    component: ExpensesComponent,
-    canActivate: [AuthGuard]
+    redirectTo: "/expenses"
   },
   {path: "expenses", component: ExpensesComponent},
   {path: "incomes", component: IncomesComponent, canActivate: [AuthGuard]},
@@ -23,6 +23,7 @@ const routes: Routes = [
   {path: "currencies", component: CurrenciesComponent, canActivate: [AuthGuard]},
   {path: "transfers", component: TransfersComponent, canActivate: [AuthGuard]},
   {path: "exchanges", component: ExchangesComponent, canActivate: [AuthGuard]},
+  {path: "**", component: NotFoundComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({

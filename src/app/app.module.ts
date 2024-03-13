@@ -27,6 +27,7 @@ import { TransferInputComponent } from './components/inputs/transfer-input/trans
 import { ExchangeInputComponent } from './components/inputs/exchange-input/exchange-input.component';
 import { TransferWigetComponent } from './components/wigets/transfer-wiget/transfer-wiget.component';
 import { ExchangeWigetComponent } from './components/wigets/exchange-wiget/exchange-wiget.component';
+import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { ExchangeWigetComponent } from './components/wigets/exchange-wiget/excha
     TransferInputComponent,
     ExchangeInputComponent,
     TransferWigetComponent,
-    ExchangeWigetComponent
+    ExchangeWigetComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,
