@@ -17,6 +17,7 @@ export class OperationWigetComponent implements OnInit {
   eOperationType = OperationTypeEnum;
   dailyOperations: Observable<OperationDto[]>;
   dailyOperationsSummary: {currencyCode:string, summ:string}[] = [];
+  reportDate = moment();
 
   constructor(private operationService: OperationService) {
     this.dailyOperations = this.operationService.dailyOperations;
@@ -46,5 +47,23 @@ export class OperationWigetComponent implements OnInit {
 
   formatTime(date: string): string {
     return moment(date).format('HH:mm');
+  }
+
+  decreaseDate() {
+    this.reportDate = this.reportDate.subtract(1, 'days');
+    this.operationService.dailyOperationsUpdate(this.operationType, this.reportDate.format())
+  }
+
+  increaseDate() {
+    this.reportDate = this.reportDate.add(1, 'days');
+    this.operationService.dailyOperationsUpdate(this.operationType, this.reportDate.format())
+  }
+
+  get isToday(): boolean {
+    return this.reportDate.format("DD-MM-yyyy") === moment().format("DD-MM-yyyy");
+  }
+
+  get isYesterday(): boolean {
+    return this.reportDate.format("DD-MM-yyyy") === moment().subtract(1, 'days').format("DD-MM-yyyy");
   }
 }

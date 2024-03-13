@@ -1,8 +1,17 @@
 <div class="card">
   <div class="card-body">
     <table class="table table-sm caption-top">
-      <caption *ngIf="operationType === eOperationType.EXPENSE">Расходы за сегодня</caption>
-      <caption *ngIf="operationType === eOperationType.INCOME">Доходы за сегодня</caption>
+      <caption>
+        <span *ngIf="operationType === eOperationType.INCOME">Доходы</span>
+        <span *ngIf="operationType === eOperationType.EXPENSE">Расходы</span>
+        <span> за
+          <strong class="date-switch-button" (click)="decreaseDate()"><</strong>
+          <span *ngIf="!isYesterday && !isToday" > {{reportDate.format("DD-MM-yyyy, dd")}} </span>
+          <span *ngIf="isToday"> сегодня, {{reportDate.format("dd")}} </span>
+          <span *ngIf="isYesterday"> вчера, {{reportDate.format("dd")}} </span>
+          <strong class="date-switch-button" (click)="increaseDate()">></strong>
+        </span>
+      </caption>
       <tbody>
       <tr>
         <td>Время</td>
@@ -18,10 +27,10 @@
         <td>{{operation.currencyCode}}</td>
       </tr>
       <tr *ngIf="dailyOperationsSummary.length !== 0">
-        <td colspan="4">Итого:</td>
+        <td colspan="4"></td>
       </tr>
-      <tr *ngFor="let operation of dailyOperationsSummary">
-        <td colspan="2"></td>
+      <tr *ngFor="let operation of dailyOperationsSummary; index as i">
+        <td colspan="2"><span *ngIf="i === 0">Итого:</span></td>
         <td style="color: firebrick" *ngIf="operationType === eOperationType.EXPENSE">{{operation.summ|number:"1.2-3"}}</td>
         <td style="color: forestgreen" *ngIf="operationType === eOperationType.INCOME">{{operation.summ|number:"1.2-3"}}</td>
         <td>{{operation.currencyCode}}</td>
