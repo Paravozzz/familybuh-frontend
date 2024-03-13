@@ -12,7 +12,7 @@ export function initializeKeycloak(keycloak: KeycloakService) {
       initOptions: {
         onLoad: 'check-sso',
         silentCheckSsoRedirectUri:
-          window.location.origin + window.location.pathname + 'assets/silent-check-sso.html',
+          window.location.origin +'/assets/silent-check-sso.html',
         //onLoad: 'login-required',
         checkLoginIframe: true,
         pkceMethod: "S256"
