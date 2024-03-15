@@ -1,9 +1,9 @@
-export interface ExchangeCreate {
+export interface ExchangeDto {
   expenseAmount: string,
   incomeAmount: string,
   expenseCurrencyCode: string,
   incomeCurrencyCode: string,
-  accountId: number,
+  accountName: string,
   description: string,
   date: string,
 }
