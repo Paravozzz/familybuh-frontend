@@ -14,9 +14,6 @@ import {ExchangeService} from "../../../service/exchange.service";
 
 const moment = _rollupMoment || _moment;
 
-//TODO: Проверить бэкенд, что там есть апишки.
-//TODO: Учесть что отправляем и получаем accountNAME, а не id, в части отображения наименования аккаунта в UI.
-
 @Component({
   selector: 'app-exchange-input',
   templateUrl: './exchange-input.component.html',
@@ -39,7 +36,7 @@ export class ExchangeInputComponent implements OnInit{
   lastExchangeExpenseCurrencyLoaded: boolean = false;
   lastExchangeIncomeCurrencySettingName !: string;
   lastExchangeIncomeCurrencyLoaded: boolean = false;
-  lastExchangeAccountSettingName!: string;
+  lastExchangeAccountIdSettingName!: string;
   lastExchangeAccountLoaded: boolean = false;
 
   hours: number[];
@@ -94,8 +91,8 @@ export class ExchangeInputComponent implements OnInit{
 
   private _initConstants() {
     this.lastExchangeExpenseCurrencySettingName = environment.constants.last_exchange_expense_currency
-    this.lastExchangeIncomeCurrencySettingName = environment.constants.last_exchange_expense_currency;
-    this.lastExchangeAccountSettingName = environment.constants.last_exchange_account_name;
+    this.lastExchangeIncomeCurrencySettingName = environment.constants.last_exchange_income_currency;
+    this.lastExchangeAccountIdSettingName = environment.constants.last_exchange_account_id;
   }
 
   private _loadCurrencies() {
@@ -138,7 +135,7 @@ export class ExchangeInputComponent implements OnInit{
         this.userAccountsLoaded = true;
         this._isLoaded();
 
-        this.settingService.findByName(this.lastExchangeAccountSettingName).subscribe(setting => {
+        this.settingService.findByName(this.lastExchangeAccountIdSettingName).subscribe(setting => {
           if (setting?.value) {
             this.selectedExchangeAccountName = userAccounts.filter(account => account.id == Number.parseInt(setting.value))[0].name;
           } else {
@@ -171,14 +168,16 @@ export class ExchangeInputComponent implements OnInit{
     this.loadedEvent.emit(result);
   }
 
-  transferSave() {
+  exchangeSave() {
     this.saveButtonDisabled = true;
     let formValue = this.exchangeInputForm.value;
     formValue.date = this.dateService.computeDateAndTime(formValue);
     const exchange: ExchangeCreate = <ExchangeCreate>formValue;
+    exchange.expenseAccountId = this._computeAccountId(formValue.accountName, formValue.expenseCurrencyCode);
+    exchange.incomeAccountId = this._computeAccountId(formValue.accountName, formValue.incomeCurrencyCode);
     this.exchangeService.exchange(exchange).subscribe({
       next: value => {
-        this._saveOperationDefaults(exchange.expenseCurrencyCode, exchange.incomeCurrencyCode, formValue.accountName);
+        this._saveOperationDefaults(formValue.expenseCurrencyCode, formValue.incomeCurrencyCode, exchange.expenseAccountId);
       }, complete: () => {
         this._afterOperationCreate();
       }, error: err => {
@@ -193,7 +192,8 @@ export class ExchangeInputComponent implements OnInit{
     return accountId;
   }
 
-  private _saveOperationDefaults(expenseCurrencyCode: string, incomeCurrencyCode: string, exchangeAccountName: string) {
+  private _saveOperationDefaults(expenseCurrencyCode: string, incomeCurrencyCode: string, exchangeAccountId: number) {
+    //TODO: Подумать: нафига мы сохраняем CurrencyCode, если в Account уже есть currencyCode?
     this.settingService.save({name: this.lastExchangeExpenseCurrencySettingName, value: expenseCurrencyCode})
       .subscribe(() => {
       });
@@ -202,7 +202,7 @@ export class ExchangeInputComponent implements OnInit{
       .subscribe(() => {
       });
 
-    this.settingService.save({name: this.lastExchangeAccountSettingName, value: exchangeAccountName})
+    this.settingService.save({name: this.lastExchangeAccountIdSettingName, value: exchangeAccountId.toString()})
       .subscribe(() => {
       });
   }

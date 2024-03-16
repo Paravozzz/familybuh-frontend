@@ -2,28 +2,35 @@
   <div class="card-body">
     <div class="input-group mb-2">
       <div class="form-floating">
-        <input type="text" class="form-control" id="floatingAmountInput" formControlName="amount">
-        <label for="floatingAmountInput">Сумма</label>
+        <input type="text" class="form-control" id="floatingExpenseAmountInput" formControlName="expenseAmount">
+        <label for="floatingExpenseAmountInput">Продали</label>
       </div>
       <div class="form-floating">
-        <select class="form-select" aria-label="Currency select" id="floatingCurrencySelect"
-                formControlName="currencyCode">
+        <select class="form-select" aria-label="Currency select" id="floatingExpenseCurrencySelect"
+                formControlName="expenseCurrencyCode">
           <option *ngFor="let currency of userCurrencies | async" [value]="currency.code">{{currency.code}}</option>
         </select>
-        <label for="floatingCurrencySelect">Валюта</label>
+        <label for="floatingExpenseCurrencySelect">Валюта</label>
+      </div>
+    </div>
+    <div class="input-group mb-2">
+      <div class="form-floating">
+        <input type="text" class="form-control" id="floatingIncomeAmountInput" formControlName="incomeAmount">
+        <label for="floatingIncomeAmountInput">Купили</label>
+      </div>
+      <div class="form-floating">
+        <select class="form-select" aria-label="Currency select" id="floatingIncomeCurrencySelect"
+                formControlName="incomeCurrencyCode">
+          <option *ngFor="let currency of userCurrencies | async" [value]="currency.code">{{currency.code}}</option>
+        </select>
+        <label for="floatingIncomeCurrencySelect">Валюта</label>
       </div>
     </div>
     <div class="form-floating mb-2">
-      <select class="form-select" aria-label="Currency select" id="floatingExpenseAccountSelect" formControlName="expenseAccountName">
+      <select class="form-select" aria-label="Currency select" id="floatingAccountSelect" formControlName="accountName">
         <option *ngFor="let accountName of userAccountNames" [value]="accountName">{{accountName}}</option>
       </select>
-      <label for="floatingExpenseAccountSelect">Откуда переводим</label>
-    </div>
-    <div class="form-floating mb-2">
-      <select class="form-select" aria-label="Currency select" id="floatingIncomeAccountSelect" formControlName="incomeAccountName">
-        <option *ngFor="let accountName of userAccountNames" [value]="accountName">{{accountName}}</option>
-      </select>
-      <label for="floatingIncomeAccountSelect">Куда переводим</label>
+      <label for="floatingAccountSelect">Счёт</label>
     </div>
     <div class="row mb-2">
       <div class="col">
@@ -68,6 +75,6 @@
       <input type="text" class="form-control" id="floatingDescriptionInput" formControlName="description">
       <label for="floatingDescriptionInput">Примечание</label>
     </div>
-    <button class="btn btn-primary" (click)="transferSave()" [disabled]="saveButtonDisabled">Сохранить</button>
+    <button class="btn btn-primary" (click)="exchangeSave()" [disabled]="saveButtonDisabled">Сохранить</button>
   </div>
 </div>

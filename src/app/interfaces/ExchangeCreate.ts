@@ -1,9 +1,8 @@
 export interface ExchangeCreate {
   expenseAmount: string,
   incomeAmount: string,
-  expenseCurrencyCode: string,
-  incomeCurrencyCode: string,
-  accountId: number,
+  expenseAccountId: number,
+  incomeAccountId: number,
   description: string,
   date: string,
 }

@@ -20,6 +20,6 @@ export const environment = {
 
     last_exchange_expense_currency: "last_exchange_expense_currency",
     last_exchange_income_currency: "last_exchange_income_currency",
-    last_exchange_account_name: "last_exchange_account_name"
+    last_exchange_account_id: "last_exchange_account_id"
   }
 };
