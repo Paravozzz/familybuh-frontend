@@ -16,7 +16,7 @@ const routes: Routes = [
     pathMatch: "full",
     redirectTo: "/expenses"
   },
-  {path: "expenses", component: ExpensesComponent},
+  {path: "expenses", component: ExpensesComponent, canActivate: [AuthGuard]},
   {path: "incomes", component: IncomesComponent, canActivate: [AuthGuard]},
   {path: "categories", component: CategoriesComponent, canActivate: [AuthGuard]},
   {path: "accounts", component: AccountsComponent, canActivate: [AuthGuard]},
