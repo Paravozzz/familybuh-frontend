@@ -3,7 +3,7 @@
 <div *ngIf="allCurrencies?.length !== 0">
   <div class="row  mb-3">
     <div class="col">
-      <select class="form-select" id="currencySelect" aria-label="Currency select" (change)="onCurrencySelected($event)">
+      <select class="form-select shadow-sm" id="currencySelect" aria-label="Currency select" (change)="onCurrencySelected($event)">
         <option selected>{{CLICK_TO_SELECT_CURRENCY}}</option>
         <option *ngFor="let currency of filteredCurrencies" [value]="currency">{{currency}}</option>
       </select>
@@ -12,7 +12,7 @@
       <button class="btn btn-primary" (click)="add()" [disabled]="addButtonDisabled">Добавить</button>
     </div>
   </div>
-  <ul class="list-group">
+  <ul class="list-group shadow-sm">
     <li class="list-group-item  list-group-item-secondary">Мои валюты</li>
     <li class="list-group-item" *ngFor="let currency of userCurrencies">{{currency}}</li>
   </ul>

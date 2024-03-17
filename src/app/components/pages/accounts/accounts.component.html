@@ -1,6 +1,6 @@
 <app-spinner [condition]="!userAccountsLoaded"/>
 <button type="button" class="btn btn-primary" (click)="openAddDialog()" *ngIf="userAccountsLoaded">Новый счёт</button>
-<div class="card text-bg-light mb-2" *ngFor="let accountSummary of userAccountSummaries">
+<div class="card mb-2 shadow-sm" *ngFor="let accountSummary of userAccountSummaries">
   <div class="card-body">
     <h4 class="card-title">{{accountSummary.name}}</h4>
     <h5 class="card-subtitle mb-2 text-body-secondary">{{accountSummary.description}}</h5>

@@ -1,4 +1,4 @@
-<div [formGroup]="transferInputForm" class="card mb-2">
+<div [formGroup]="transferInputForm" class="card mb-2 shadow-sm">
   <div class="card-body">
     <div class="input-group mb-2">
       <div class="form-floating">
@@ -17,13 +17,13 @@
       <select class="form-select" aria-label="Currency select" id="floatingExpenseAccountSelect" formControlName="expenseAccountName">
         <option *ngFor="let accountName of userAccountNames" [value]="accountName">{{accountName}}</option>
       </select>
-      <label for="floatingExpenseAccountSelect">Откуда переводим</label>
+      <label for="floatingExpenseAccountSelect">Со счёта</label>
     </div>
     <div class="form-floating mb-2">
       <select class="form-select" aria-label="Currency select" id="floatingIncomeAccountSelect" formControlName="incomeAccountName">
         <option *ngFor="let accountName of userAccountNames" [value]="accountName">{{accountName}}</option>
       </select>
-      <label for="floatingIncomeAccountSelect">Куда переводим</label>
+      <label for="floatingIncomeAccountSelect">На счёт</label>
     </div>
     <div class="row mb-2">
       <div class="col">

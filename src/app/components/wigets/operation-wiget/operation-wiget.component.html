@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card shadow-sm">
   <div class="card-body">
     <table class="table table-sm caption-top">
       <caption>
@@ -22,18 +22,20 @@
       <tr *ngFor="let operation of dailyOperations|async">
         <td>{{formatTime(operation.date)}}</td>
         <td>{{operation.category}}</td>
-        <td style="color: firebrick" *ngIf="operationType === eOperationType.EXPENSE">{{operation.amount|number:"1.2-3"}}</td>
-        <td style="color: forestgreen" *ngIf="operationType === eOperationType.INCOME">{{operation.amount|number:"1.2-3"}}</td>
-        <td>{{operation.currencyCode}}</td>
+        <td *ngIf="operationType === eOperationType.EXPENSE"><span class="expense-amount">{{operation.amount|number:"1.2-3"}}</span></td>
+        <td *ngIf="operationType === eOperationType.INCOME"><span class="income-amount">+{{operation.amount|number:"1.2-3"}}</span></td>
+        <td *ngIf="operationType === eOperationType.EXPENSE"><span class="expense-amount">{{operation.currencyCode}}</span></td>
+        <td *ngIf="operationType === eOperationType.INCOME"><span class="income-amount">{{operation.currencyCode}}</span></td>
       </tr>
       <tr *ngIf="dailyOperationsSummary.length !== 0">
         <td colspan="4"></td>
       </tr>
       <tr *ngFor="let operation of dailyOperationsSummary; index as i">
         <td colspan="2"><span *ngIf="i === 0">Итого:</span></td>
-        <td style="color: firebrick" *ngIf="operationType === eOperationType.EXPENSE">{{operation.summ|number:"1.2-3"}}</td>
-        <td style="color: forestgreen" *ngIf="operationType === eOperationType.INCOME">{{operation.summ|number:"1.2-3"}}</td>
-        <td>{{operation.currencyCode}}</td>
+        <td *ngIf="operationType === eOperationType.EXPENSE"><span class="expense-amount">{{operation.summ|number:"1.2-3"}}</span></td>
+        <td *ngIf="operationType === eOperationType.INCOME"><span class="income-amount">+{{operation.summ|number:"1.2-3"}}</span></td>
+        <td *ngIf="operationType === eOperationType.EXPENSE"><span class="expense-amount">{{operation.currencyCode}}</span></td>
+        <td *ngIf="operationType === eOperationType.INCOME"><span class="income-amount">{{operation.currencyCode}}</span></td>
       </tr>
       </tbody>
     </table>

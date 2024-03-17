@@ -1,7 +1,7 @@
 <app-spinner [condition]="!userCategoriesLoaded"/>
 <button type="button" class="btn btn-primary" (click)="openAddDialog()" *ngIf="userCategoriesLoaded">Новая категория
 </button>
-<div class="card text-bg-light mb-2" *ngFor="let category of userCategories | async; trackBy: trackById">
+<div class="card mb-2 shadow-sm" *ngFor="let category of userCategories | async; trackBy: trackById">
   <div class="card-body">
     <h4 class="card-title">{{category.name}}</h4>
     <h5 class="card-subtitle mb-2 text-body-secondary" *ngIf="category.isIncome">Доход</h5>

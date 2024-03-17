@@ -193,7 +193,6 @@ export class ExchangeInputComponent implements OnInit{
   }
 
   private _saveOperationDefaults(expenseCurrencyCode: string, incomeCurrencyCode: string, exchangeAccountId: number) {
-    //TODO: Подумать: нафига мы сохраняем CurrencyCode, если в Account уже есть currencyCode?
     this.settingService.save({name: this.lastExchangeExpenseCurrencySettingName, value: expenseCurrencyCode})
       .subscribe(() => {
       });

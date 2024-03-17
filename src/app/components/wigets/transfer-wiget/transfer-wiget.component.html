@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card shadow-sm">
   <div class="card-body">
     <table class="table table-sm caption-top">
       <caption>
@@ -14,8 +14,8 @@
       <tbody>
       <tr>
         <td>Время</td>
-        <td>Откуда</td>
-        <td>Куда</td>
+        <td>Со счёта</td>
+        <td>На счёт</td>
         <td>Сумма</td>
         <td>Валюта</td>
       </tr>
@@ -23,16 +23,16 @@
         <td>{{formatTime(transfer.date)}}</td>
         <td>{{transfer.expenseAccountName}}</td>
         <td>{{transfer.incomeAccountName}}</td>
-        <td>{{transfer.amount|number:"1.2-3"}}</td>
-        <td>{{transfer.currencyCode}}</td>
+        <td><span class="income-amount">{{transfer.amount|number:"1.2-3"}}</span></td>
+        <td><span class="income-amount">{{transfer.currencyCode}}</span></td>
       </tr>
       <tr *ngIf="dailyTransfersSummary.length !== 0">
         <td colspan="5"></td>
       </tr>
       <tr *ngFor="let transfer of dailyTransfersSummary; index as i">
         <td colspan="3"><span *ngIf="i === 0">Итого:</span></td>
-        <td style="color: forestgreen">{{transfer.summ|number:"1.2-3"}}</td>
-        <td>{{transfer.currencyCode}}</td>
+        <td><span class="income-amount">{{transfer.summ|number:"1.2-3"}}</span></td>
+        <td><span class="income-amount">{{transfer.currencyCode}}</span></td>
       </tr>
       </tbody>
     </table>
