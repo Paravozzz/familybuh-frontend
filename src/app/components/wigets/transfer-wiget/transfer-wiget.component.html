@@ -13,11 +13,11 @@
       </caption>
       <tbody>
       <tr>
-        <td>Время</td>
-        <td>Со счёта</td>
-        <td>На счёт</td>
-        <td>Сумма</td>
-        <td>Валюта</td>
+        <td><span class="fw-medium">Время</span></td>
+        <td><span class="fw-medium">Со счёта</span></td>
+        <td><span class="fw-medium">На счёт</span></td>
+        <td><span class="fw-medium">Сумма</span></td>
+        <td><span class="fw-medium">Валюта</span></td>
       </tr>
       <tr *ngFor="let transfer of dailyTransfers|async">
         <td>{{formatTime(transfer.date)}}</td>
@@ -30,9 +30,9 @@
         <td colspan="5"></td>
       </tr>
       <tr *ngFor="let transfer of dailyTransfersSummary; index as i">
-        <td colspan="3"><span *ngIf="i === 0">Итого:</span></td>
-        <td><span class="income-amount">{{transfer.summ|number:"1.2-3"}}</span></td>
-        <td><span class="income-amount">{{transfer.currencyCode}}</span></td>
+        <td colspan="3"><span *ngIf="i === 0" class="fw-medium">Итого:</span></td>
+        <td><span class="income-amount fw-medium">{{transfer.summ|number:"1.2-3"}}</span></td>
+        <td><span class="income-amount fw-medium">{{transfer.currencyCode}}</span></td>
       </tr>
       </tbody>
     </table>

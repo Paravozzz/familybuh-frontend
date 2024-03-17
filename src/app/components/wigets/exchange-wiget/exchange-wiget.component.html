@@ -13,10 +13,10 @@
       </caption>
       <tbody>
       <tr>
-        <td>Время</td>
-        <td>Счёт</td>
-        <td>Сумма</td>
-        <td>Валюта</td>
+        <td><span class="fw-medium">Время</span></td>
+        <td><span class="fw-medium">Счёт</span></td>
+        <td><span class="fw-medium">Сумма</span></td>
+        <td><span class="fw-medium">Валюта</span></td>
       </tr>
       <tr *ngFor="let exchange of dailyExchanges|async">
         <td>{{formatTime(exchange.date)}}</td>
@@ -32,11 +32,11 @@
         <td colspan="6"></td>
       </tr>
       <tr *ngFor="let transfer of dailyExchangesSummary; index as i">
-        <td colspan="2"><span *ngIf="i === 0">Итого:</span></td>
-        <td *ngIf="transfer.isExpense"><span class="expense-amount">{{transfer.summ|number:"1.2-3"}}</span></td>
-        <td *ngIf="!transfer.isExpense"><span class="income-amount">+{{transfer.summ|number:"1.2-3"}}</span></td>
-        <td *ngIf="transfer.isExpense"><span class="expense-amount">{{transfer.currencyCode}}</span></td>
-        <td *ngIf="!transfer.isExpense"><span class="income-amount">{{transfer.currencyCode}}</span></td>
+        <td colspan="2"><span *ngIf="i === 0" class="fw-medium">Итого:</span></td>
+        <td *ngIf="transfer.isExpense"><span class="expense-amount fw-medium">{{transfer.summ|number:"1.2-3"}}</span></td>
+        <td *ngIf="!transfer.isExpense"><span class="income-amount fw-medium">+{{transfer.summ|number:"1.2-3"}}</span></td>
+        <td *ngIf="transfer.isExpense"><span class="expense-amount fw-medium">{{transfer.currencyCode}}</span></td>
+        <td *ngIf="!transfer.isExpense"><span class="income-amount fw-medium">{{transfer.currencyCode}}</span></td>
       </tr>
       </tbody>
     </table>
