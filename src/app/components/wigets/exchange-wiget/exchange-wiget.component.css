@@ -1,0 +1,17 @@
+.date-switch-button {
+  font-size: 1.2rem;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.date-switch-button:hover {
+  cursor: pointer;
+}
+
+.expense-amount {
+  color: firebrick;
+}
+
+.income-amount {
+  color: forestgreen;
+}

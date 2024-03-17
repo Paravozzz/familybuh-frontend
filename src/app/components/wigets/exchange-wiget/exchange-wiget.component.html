@@ -1,1 +1,44 @@
-<p>exchange-wiget works!</p>
+<div class="card">
+  <div class="card-body">
+    <table class="table table-sm caption-top">
+      <caption>
+        <span>Переводы</span>
+        <span> за
+          <strong class="date-switch-button" (click)="decreaseDate()"><</strong>
+          <span *ngIf="!isYesterday && !isToday" > {{reportDate.format("DD-MM-yyyy, dd")}} </span>
+          <span *ngIf="isToday"> сегодня, {{reportDate.format("dd")}} </span>
+          <span *ngIf="isYesterday"> вчера, {{reportDate.format("dd")}} </span>
+          <strong class="date-switch-button" (click)="increaseDate()">></strong>
+        </span>
+      </caption>
+      <tbody>
+      <tr>
+        <td>Время</td>
+        <td>Счёт</td>
+        <td>Сумма</td>
+        <td>Валюта</td>
+      </tr>
+      <tr *ngFor="let exchange of dailyExchanges|async">
+        <td>{{formatTime(exchange.date)}}</td>
+        <td>{{exchange.accountName}}</td>
+        <td><span class="expense-amount">{{exchange.expenseAmount|number:"1.2-3"}}</span><br>
+          <span class="income-amount">+{{exchange.incomeAmount|number:"1.2-3"}}</span>
+        </td>
+        <td><span class="expense-amount">{{exchange.expenseCurrencyCode}}</span><br>
+          <span class="income-amount">{{exchange.incomeCurrencyCode}}</span>
+        </td>
+      </tr>
+      <tr *ngIf="dailyExchangesSummary.length !== 0">
+        <td colspan="6"></td>
+      </tr>
+      <tr *ngFor="let transfer of dailyExchangesSummary; index as i">
+        <td colspan="2"><span *ngIf="i === 0">Итого:</span></td>
+        <td *ngIf="transfer.isExpense"><span class="expense-amount">{{transfer.summ|number:"1.2-3"}}</span></td>
+        <td *ngIf="!transfer.isExpense"><span class="income-amount">+{{transfer.summ|number:"1.2-3"}}</span></td>
+        <td *ngIf="transfer.isExpense"><span class="expense-amount">{{transfer.currencyCode}}</span></td>
+        <td *ngIf="!transfer.isExpense"><span class="income-amount">{{transfer.currencyCode}}</span></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

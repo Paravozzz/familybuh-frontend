@@ -3,8 +3,7 @@ export interface ExchangeDto {
   incomeAmount: string,
   expenseCurrencyCode: string,
   incomeCurrencyCode: string,
-  expenseAccountName: string,
-  incomeAccountName: string,
+  accountName: string,
   description: string,
   date: string,
 }
