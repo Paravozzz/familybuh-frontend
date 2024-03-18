@@ -10,5 +10,9 @@ export interface Currency {
   /**
    * Наименование валюты
    */
-  name: string
+  name: string,
+  /**
+   * Количество знаков дробной части
+   */
+  decimal: number
 }

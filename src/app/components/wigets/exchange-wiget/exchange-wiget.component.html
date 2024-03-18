@@ -24,8 +24,8 @@
         <td><span class="expense-amount">{{exchange.expenseAmount|number:"1.2-3"}}</span><br>
           <span class="income-amount">+{{exchange.incomeAmount|number:"1.2-3"}}</span>
         </td>
-        <td><span class="expense-amount">{{exchange.expenseCurrencyCode}}</span><br>
-          <span class="income-amount">{{exchange.incomeCurrencyCode}}</span>
+        <td><span class="expense-amount">{{exchange.expenseCurrency.code}}</span><br>
+          <span class="income-amount">{{exchange.incomeCurrency.code}}</span>
         </td>
       </tr>
       <tr *ngIf="dailyExchangesSummary.length !== 0">
@@ -35,8 +35,8 @@
         <td colspan="2"><span *ngIf="i === 0" class="fw-medium">Итого:</span></td>
         <td *ngIf="transfer.isExpense"><span class="expense-amount fw-medium">{{transfer.summ|number:"1.2-3"}}</span></td>
         <td *ngIf="!transfer.isExpense"><span class="income-amount fw-medium">+{{transfer.summ|number:"1.2-3"}}</span></td>
-        <td *ngIf="transfer.isExpense"><span class="expense-amount fw-medium">{{transfer.currencyCode}}</span></td>
-        <td *ngIf="!transfer.isExpense"><span class="income-amount fw-medium">{{transfer.currencyCode}}</span></td>
+        <td *ngIf="transfer.isExpense"><span class="expense-amount fw-medium">{{transfer.currency.code}}</span></td>
+        <td *ngIf="!transfer.isExpense"><span class="income-amount fw-medium">{{transfer.currency.code}}</span></td>
       </tr>
       </tbody>
     </table>

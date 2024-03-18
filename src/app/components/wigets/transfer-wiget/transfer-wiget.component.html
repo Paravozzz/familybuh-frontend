@@ -24,7 +24,7 @@
         <td>{{transfer.expenseAccountName}}</td>
         <td>{{transfer.incomeAccountName}}</td>
         <td><span class="income-amount">{{transfer.amount|number:"1.2-3"}}</span></td>
-        <td><span class="income-amount">{{transfer.currencyCode}}</span></td>
+        <td><span class="income-amount">{{transfer.currency.code}}</span></td>
       </tr>
       <tr *ngIf="dailyTransfersSummary.length !== 0">
         <td colspan="5"></td>
@@ -32,7 +32,7 @@
       <tr *ngFor="let transfer of dailyTransfersSummary; index as i">
         <td colspan="3"><span *ngIf="i === 0" class="fw-medium">Итого:</span></td>
         <td><span class="income-amount fw-medium">{{transfer.summ|number:"1.2-3"}}</span></td>
-        <td><span class="income-amount fw-medium">{{transfer.currencyCode}}</span></td>
+        <td><span class="income-amount fw-medium">{{transfer.currency.code}}</span></td>
       </tr>
       </tbody>
     </table>

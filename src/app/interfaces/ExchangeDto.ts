@@ -1,8 +1,10 @@
+import {Currency} from "./Currency";
+
 export interface ExchangeDto {
   expenseAmount: string,
   incomeAmount: string,
-  expenseCurrencyCode: string,
-  incomeCurrencyCode: string,
+  expenseCurrency: Currency,
+  incomeCurrency: Currency,
   accountName: string,
   description: string,
   date: string,

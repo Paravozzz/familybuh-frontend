@@ -5,6 +5,7 @@ import * as _moment from 'moment';
 import {default as _rollupMoment} from 'moment';
 import {Observable} from "rxjs";
 import {ExchangeDto} from "../../../interfaces/ExchangeDto";
+import {Currency} from "../../../interfaces/Currency";
 const moment = _rollupMoment || _moment;
 
 @Component({
@@ -15,12 +16,12 @@ const moment = _rollupMoment || _moment;
 export class ExchangeWigetComponent {
 
   dailyExchanges: Observable<ExchangeDto[]>;
-  dailyExchangesSummary: {isExpense: boolean, currencyCode:string, summ:string}[] = [];
+  dailyExchangesSummary: {isExpense: boolean, currency:Currency, summ:string}[] = [];
   reportDate = moment();
 
   constructor(private exchangeService: ExchangeService) {
     this.dailyExchanges = exchangeService.dailyExchanges;
-    const summaryMap: Map<string, {expense:number, income:number}> = new Map<string, {expense:number, income:number}>();
+    const summaryMap: Map<Currency, {expense:number, income:number}> = new Map<Currency, {expense:number, income:number}>();
     this.dailyExchanges.subscribe(exchanges => {
       summaryMap.clear();
       this.dailyExchangesSummary = [];
@@ -28,16 +29,16 @@ export class ExchangeWigetComponent {
         return;
       }
       exchanges.forEach(exchange => {
-        const expenseCurrencyCode = exchange.expenseCurrencyCode;
-        const incomeCurrencyCode = exchange.incomeCurrencyCode;
+        const expenseCurrency = exchange.expenseCurrency;
+        const incomeCurrency = exchange.incomeCurrency;
 
-        let expenseSumm = summaryMap.get(expenseCurrencyCode) ?? {expense:0, income:0};
+        let expenseSumm = summaryMap.get(expenseCurrency) ?? {expense:0, income:0};
         expenseSumm.expense += Number.parseFloat(exchange.expenseAmount);
-        summaryMap.set(expenseCurrencyCode, expenseSumm);
+        summaryMap.set(expenseCurrency, expenseSumm);
 
-        let incomeSumm = summaryMap.get(incomeCurrencyCode) ?? {expense:0, income:0};
+        let incomeSumm = summaryMap.get(incomeCurrency) ?? {expense:0, income:0};
         incomeSumm.income += Number.parseFloat(exchange.incomeAmount);
-        summaryMap.set(incomeCurrencyCode, incomeSumm);
+        summaryMap.set(incomeCurrency, incomeSumm);
       });
 
       for (const entry of summaryMap.entries()) {
@@ -45,10 +46,10 @@ export class ExchangeWigetComponent {
         const expenseSumm = entry[1].expense;
         const incomeSumm = entry[1].income;
         if (Math.abs(Math.round(expenseSumm)) !== 0) {
-          this.dailyExchangesSummary.push({currencyCode: currencyCode, isExpense: true, summ: expenseSumm.toString()})
+          this.dailyExchangesSummary.push({currency: currencyCode, isExpense: true, summ: expenseSumm.toString()})
         }
         if (Math.abs(Math.round(incomeSumm)) !== 0) {
-          this.dailyExchangesSummary.push({currencyCode: currencyCode, isExpense: false, summ: incomeSumm.toString()})
+          this.dailyExchangesSummary.push({currency: currencyCode, isExpense: false, summ: incomeSumm.toString()})
         }
       }
     });

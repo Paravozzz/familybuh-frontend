@@ -24,8 +24,8 @@
         <td>{{operation.category}}</td>
         <td *ngIf="operationType === eOperationType.EXPENSE"><span class="expense-amount">{{operation.amount|number:"1.2-3"}}</span></td>
         <td *ngIf="operationType === eOperationType.INCOME"><span class="income-amount">+{{operation.amount|number:"1.2-3"}}</span></td>
-        <td *ngIf="operationType === eOperationType.EXPENSE"><span class="expense-amount">{{operation.currencyCode}}</span></td>
-        <td *ngIf="operationType === eOperationType.INCOME"><span class="income-amount">{{operation.currencyCode}}</span></td>
+        <td *ngIf="operationType === eOperationType.EXPENSE"><span class="expense-amount">{{operation.currency.code}}</span></td>
+        <td *ngIf="operationType === eOperationType.INCOME"><span class="income-amount">{{operation.currency.code}}</span></td>
       </tr>
       <tr *ngIf="dailyOperationsSummary.length !== 0">
         <td colspan="4"></td>
@@ -34,8 +34,8 @@
         <td colspan="2"><span *ngIf="i === 0" class="fw-medium">Итого:</span></td>
         <td *ngIf="operationType === eOperationType.EXPENSE"><span class="expense-amount fw-medium">{{operation.summ|number:"1.2-3"}}</span></td>
         <td *ngIf="operationType === eOperationType.INCOME"><span class="income-amount fw-medium">+{{operation.summ|number:"1.2-3"}}</span></td>
-        <td *ngIf="operationType === eOperationType.EXPENSE"><span class="expense-amount fw-medium">{{operation.currencyCode}}</span></td>
-        <td *ngIf="operationType === eOperationType.INCOME"><span class="income-amount fw-medium">{{operation.currencyCode}}</span></td>
+        <td *ngIf="operationType === eOperationType.EXPENSE"><span class="expense-amount fw-medium">{{operation.currency.code}}</span></td>
+        <td *ngIf="operationType === eOperationType.INCOME"><span class="income-amount fw-medium">{{operation.currency.code}}</span></td>
       </tr>
       </tbody>
     </table>

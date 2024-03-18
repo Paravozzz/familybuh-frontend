@@ -5,6 +5,7 @@ import {OperationDto} from "../../../interfaces/OperationDto";
 import {OperationTypeEnum} from "../../../enums/OperationTypeEnum";
 import * as _moment from 'moment';
 import {default as _rollupMoment} from 'moment';
+import {Currency} from "../../../interfaces/Currency";
 
 const moment = _rollupMoment || _moment;
 @Component({
@@ -16,12 +17,12 @@ export class OperationWigetComponent implements OnInit {
   @Input("operationType") operationType!: OperationTypeEnum;
   eOperationType = OperationTypeEnum;
   dailyOperations: Observable<OperationDto[]>;
-  dailyOperationsSummary: {currencyCode:string, summ:string}[] = [];
+  dailyOperationsSummary: {currency:Currency, summ:string}[] = [];
   reportDate = moment();
 
   constructor(private operationService: OperationService) {
     this.dailyOperations = this.operationService.dailyOperations;
-    const summaryMap: Map<string, number> = new Map<string, number>();
+    const summaryMap: Map<Currency, number> = new Map<Currency, number>();
     this.dailyOperations.subscribe(operations => {
       summaryMap.clear();
       this.dailyOperationsSummary = [];
@@ -29,14 +30,14 @@ export class OperationWigetComponent implements OnInit {
         return;
       }
       operations.forEach(operation => {
-        const currencyCode = operation.currencyCode;
-        let summ = summaryMap.get(currencyCode) ?? 0;
+        const currency = operation.currency;
+        let summ = summaryMap.get(currency) ?? 0;
         summ += Number.parseFloat(operation.amount);
-        summaryMap.set(currencyCode, summ);
+        summaryMap.set(currency, summ);
       });
 
       for (const entry of summaryMap.entries()) {
-        this.dailyOperationsSummary.push({currencyCode: entry[0], summ: entry[1].toString()})
+        this.dailyOperationsSummary.push({currency: entry[0], summ: entry[1].toString()})
       }
     });
   }

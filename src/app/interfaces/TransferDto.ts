@@ -1,7 +1,9 @@
+import {Currency} from "./Currency";
+
 export interface TransferDto {
   transferId: number,
   amount: string,
-  currencyCode: string,
+  currency: Currency,
   expenseAccountName: string,
   incomeAccountName: string,
   description: string,

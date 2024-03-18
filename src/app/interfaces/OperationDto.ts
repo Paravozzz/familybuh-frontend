@@ -1,7 +1,9 @@
+import {Currency} from "./Currency";
+
 export interface OperationDto {
   operationId: number,
   amount: string,
-  currencyCode: string,
+  currency: Currency,
   accountId: number,
   category: string,
   description: string,

@@ -4,6 +4,7 @@ import {default as _rollupMoment} from 'moment';
 import {TransferService} from "../../../service/transfer.service";
 import {Observable} from "rxjs";
 import {TransferDto} from "../../../interfaces/TransferDto";
+import {Currency} from "../../../interfaces/Currency";
 
 const moment = _rollupMoment || _moment;
 
@@ -16,12 +17,12 @@ const moment = _rollupMoment || _moment;
 export class TransferWigetComponent implements OnInit {
 
   dailyTransfers: Observable<TransferDto[]>;
-  dailyTransfersSummary: {currencyCode:string, summ:string}[] = [];
+  dailyTransfersSummary: {currency:Currency, summ:string}[] = [];
   reportDate = moment();
 
   constructor(private transferService: TransferService) {
     this.dailyTransfers = this.transferService.dailyTransfers;
-    const summaryMap: Map<string, number> = new Map<string, number>();
+    const summaryMap: Map<Currency, number> = new Map<Currency, number>();
     this.dailyTransfers.subscribe(transfers => {
       summaryMap.clear();
       this.dailyTransfersSummary = [];
@@ -29,14 +30,14 @@ export class TransferWigetComponent implements OnInit {
         return;
       }
       transfers.forEach(transfer => {
-        const currencyCode = transfer.currencyCode;
-        let summ = summaryMap.get(currencyCode) ?? 0;
+        const currency = transfer.currency;
+        let summ = summaryMap.get(currency) ?? 0;
         summ += Number.parseFloat(transfer.amount);
-        summaryMap.set(currencyCode, summ);
+        summaryMap.set(currency, summ);
       });
 
       for (const entry of summaryMap.entries()) {
-        this.dailyTransfersSummary.push({currencyCode: entry[0], summ: entry[1].toString()})
+        this.dailyTransfersSummary.push({currency: entry[0], summ: entry[1].toString()})
       }
     });
   }
