@@ -2,8 +2,11 @@
   <div class="card-body">
     <div class="input-group mb-2">
       <div class="form-floating">
-        <input type="text" class="form-control" id="floatingExpenseAmountInput" formControlName="expenseAmount">
+        <input type="text" class="form-control" [ngClass]="{'is-invalid': controlIsInvalid('expenseAmount')}" id="floatingExpenseAmountInput"  formControlName="expenseAmount">
         <label for="floatingExpenseAmountInput">Продали</label>
+        <div *ngIf="controlHasError('expenseAmount','required')" class="invalid-feedback">Введите сумму</div>
+        <div *ngIf="controlHasError('expenseAmount','incorrectValue')" class="invalid-feedback">Сумма должна быть целым или десятичным числом</div>
+        <div *ngIf="controlHasError('expenseAmount','positiveOrZero')" class="invalid-feedback">Сумма должна быть больше или равно 0</div>
       </div>
       <div class="form-floating">
         <select class="form-select" aria-label="Currency select" id="floatingExpenseCurrencySelect"
@@ -15,8 +18,11 @@
     </div>
     <div class="input-group mb-2">
       <div class="form-floating">
-        <input type="text" class="form-control" id="floatingIncomeAmountInput" formControlName="incomeAmount">
+        <input type="text" class="form-control" [ngClass]="{'is-invalid': controlIsInvalid('incomeAmount')}" id="floatingIncomeAmountInput" formControlName="incomeAmount">
         <label for="floatingIncomeAmountInput">Купили</label>
+        <div *ngIf="controlHasError('incomeAmount','required')" class="invalid-feedback">Введите сумму</div>
+        <div *ngIf="controlHasError('incomeAmount','incorrectValue')" class="invalid-feedback">Сумма должна быть целым или десятичным числом</div>
+        <div *ngIf="controlHasError('incomeAmount','positiveOrZero')" class="invalid-feedback">Сумма должна быть больше или равно 0</div>
       </div>
       <div class="form-floating">
         <select class="form-select" aria-label="Currency select" id="floatingIncomeCurrencySelect"

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DateService} from "../../../service/date.service";
 import {Observable, Subscription, tap} from "rxjs";
 import {Currency} from "../../../interfaces/Currency";
@@ -11,6 +11,10 @@ import * as _moment from 'moment';
 import {default as _rollupMoment} from 'moment';
 import {ExchangeCreate} from "../../../interfaces/ExchangeCreate";
 import {ExchangeService} from "../../../service/exchange.service";
+import {
+  amountCorrectValueValidator,
+  amountPositiveOrZeroValueValidator
+} from '../../shared/validators/amount.validators';
 
 const moment = _rollupMoment || _moment;
 
@@ -59,15 +63,15 @@ export class ExchangeInputComponent implements OnInit{
               private fb: FormBuilder,
               private dateService: DateService) {
     this.exchangeInputForm = this.fb.group({
-      expenseAmount: "0",
-      incomeAmount: "0",
-      expenseCurrencyCode: "",
-      incomeCurrencyCode: "",
-      accountName: "",
-      description: "",
-      date: dateService.today,
-      hour: "",
-      minute: ""
+      expenseAmount: ["0", [Validators.required, amountCorrectValueValidator(), amountPositiveOrZeroValueValidator()]],
+      incomeAmount: ["0", [Validators.required, amountCorrectValueValidator(), amountPositiveOrZeroValueValidator()]],
+      expenseCurrencyCode: [""],
+      incomeCurrencyCode: [""],
+      accountName: [""],
+      description: [""],
+      date: [dateService.today],
+      hour: [""],
+      minute: [""]
     });
     this.hours = [];
     for (let i = 0; i <= 23; i++) {
@@ -175,6 +179,8 @@ export class ExchangeInputComponent implements OnInit{
     const exchange: ExchangeCreate = <ExchangeCreate>formValue;
     exchange.expenseAccountId = this._computeAccountId(formValue.accountName, formValue.expenseCurrencyCode);
     exchange.incomeAccountId = this._computeAccountId(formValue.accountName, formValue.incomeCurrencyCode);
+    exchange.expenseAmount = exchange.expenseAmount.trim();
+    exchange.incomeAmount = exchange.incomeAmount.trim();
     this.exchangeService.exchange(exchange).subscribe({
       next: value => {
         this._saveOperationDefaults(formValue.expenseCurrencyCode, formValue.incomeCurrencyCode, exchange.expenseAccountId);
@@ -211,4 +217,14 @@ export class ExchangeInputComponent implements OnInit{
     this.subscription?.unsubscribe();
     this.exchangeService.dailyExchangesUpdate(moment().format());
   }
+
+  controlHasError(controlName: string, errorName: string) {
+    return this.exchangeInputForm.get(controlName)?.getError(errorName);
+  }
+
+  controlIsInvalid(controlName: string): boolean {
+    let abstractControl = this.exchangeInputForm.get(controlName);
+    return (abstractControl?.invalid && (abstractControl?.dirty || abstractControl?.touched)) ?? false
+  }
+
 }

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CurrencyService} from "../../../service/currency.service";
 import {AccountService} from "../../../service/account.service";
 import {SettingService} from "../../../service/setting.service";
@@ -11,6 +11,10 @@ import {environment} from "../../../../environments/environment";
 import {TransferCreate} from "../../../interfaces/TransferCreate";
 import * as _moment from 'moment';
 import {default as _rollupMoment} from 'moment';
+import {
+  amountCorrectValueValidator,
+  amountPositiveOrZeroValueValidator
+} from "../../shared/validators/amount.validators";
 
 const moment = _rollupMoment || _moment;
 
@@ -61,14 +65,14 @@ export class TransferInputComponent implements OnInit {
               private fb: FormBuilder,
               private dateService: DateService) {
     this.transferInputForm = this.fb.group({
-      amount: "0",
-      currencyCode: "",
-      expenseAccountName: "",
-      incomeAccountName: "",
-      description: "",
-      date: dateService.today,
-      hour: "",
-      minute: ""
+      amount: ["0", [Validators.required, amountCorrectValueValidator(), amountPositiveOrZeroValueValidator()]],
+      currencyCode: ["0"],
+      expenseAccountName: ["0"],
+      incomeAccountName: ["0"],
+      description: [""],
+      date: [dateService.today],
+      hour: [""],
+      minute: [""]
     });
     this.hours = [];
     for (let i = 0; i <= 23; i++) {
@@ -97,6 +101,7 @@ export class TransferInputComponent implements OnInit {
     value.expenseAccountId = this._computeAccountId(value.expenseAccountName, value.currencyCode);
     value.incomeAccountId = this._computeAccountId(value.incomeAccountName, value.currencyCode);
     const transfer: TransferCreate = <TransferCreate>value;
+    transfer.amount = transfer.amount.trim();
     this.transferService.transfer(transfer).subscribe({
       next: value => {
         this._saveOperationDefaults(transfer.currencyCode, transfer.expenseAccountId, transfer.incomeAccountId);
@@ -211,5 +216,14 @@ export class TransferInputComponent implements OnInit {
     this.saveButtonDisabled = false;
     this.subscription?.unsubscribe();
     this.transferService.dailyTransfersUpdate(moment().format());
+  }
+
+  controlHasError(controlName: string, errorName: string) {
+    return this.transferInputForm.get(controlName)?.getError(errorName);
+  }
+
+  controlIsInvalid(controlName: string): boolean {
+    let abstractControl = this.transferInputForm.get(controlName);
+    return (abstractControl?.invalid && (abstractControl?.dirty || abstractControl?.touched)) ?? false
   }
 }

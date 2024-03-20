@@ -2,8 +2,11 @@
   <div class="card-body">
     <div class="input-group mb-2">
       <div class="form-floating">
-        <input type="text" class="form-control" id="floatingAmountInput" formControlName="amount">
+        <input type="text" class="form-control" [ngClass]="{'is-invalid': controlIsInvalid('amount')}" id="floatingAmountInput" formControlName="amount">
         <label for="floatingAmountInput">Сумма</label>
+        <div *ngIf="controlHasError('amount','required')" class="invalid-feedback">Введите сумму</div>
+        <div *ngIf="controlHasError('amount','incorrectValue')" class="invalid-feedback">Сумма должна быть целым или десятичным числом</div>
+        <div *ngIf="controlHasError('amount','positiveOrZero')" class="invalid-feedback">Сумма должна быть больше или равно 0</div>
       </div>
       <div class="form-floating">
         <select class="form-select" aria-label="Currency select" id="floatingCurrencySelect"

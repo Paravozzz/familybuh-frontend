@@ -8,12 +8,13 @@ import {AccountService} from "../../../service/account.service";
 import {OperationTypeEnum} from "../../../enums/OperationTypeEnum";
 import {SettingService} from "../../../service/setting.service";
 import {environment} from "../../../../environments/environment";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {OperationCreate} from "../../../interfaces/OperationCreate";
 import {OperationService} from "../../../service/operation.service";
 import {DateService} from "../../../service/date.service";
 import * as _moment from 'moment';
 import {default as _rollupMoment} from 'moment';
+import {amountCorrectValueValidator, amountPositiveOrZeroValueValidator} from "../../shared/validators/amount.validators";
 
 const moment = _rollupMoment || _moment;
 
@@ -71,14 +72,14 @@ export class OperationInputComponent implements OnInit {
               private fb: FormBuilder,
               private dateService: DateService) {
     this.operationInputForm = this.fb.group({
-      amount: "0",
-      currencyCode: "",
-      accountName: "",
-      categoryId: "0",
-      description: "",
-      date: dateService.today,
-      hour: "",
-      minute: ""
+      amount: ["0", [Validators.required, amountCorrectValueValidator(), amountPositiveOrZeroValueValidator()]],
+      currencyCode: [""],
+      accountName: [""],
+      categoryId: ["0"],
+      description: [""],
+      date: [dateService.today],
+      hour: [""],
+      minute: [""]
     });
     this.hours = [];
     for (let i = 0; i <= 23; i++) {
@@ -110,6 +111,7 @@ export class OperationInputComponent implements OnInit {
     value.date = this.dateService.computeDateAndTime(value);
     value.accountId = this._computeAccountId(this.operationInputForm.getRawValue());
     const operation: OperationCreate = <OperationCreate>value;
+    operation.amount = operation.amount.trim();
     switch (this.operationType) {
       case OperationTypeEnum.EXPENSE:
         this._createExpense(operation);
@@ -270,5 +272,14 @@ export class OperationInputComponent implements OnInit {
     const result = this.userCategoriesLoaded && this.userCurrenciesLoaded && this.userAccountsLoaded &&
     this.lastCategoryLoaded && this.lastCurrencyLoaded && this.lastAccountLoaded;
     this.loadedEvent.emit(result);
+  }
+
+  controlHasError(controlName: string, errorName: string) {
+    return this.operationInputForm.get(controlName)?.getError(errorName);
+  }
+
+  controlIsInvalid(controlName: string): boolean {
+    let abstractControl = this.operationInputForm.get(controlName);
+    return (abstractControl?.invalid && (abstractControl?.dirty || abstractControl?.touched)) ?? false
   }
 }
