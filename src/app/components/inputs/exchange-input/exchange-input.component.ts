@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DateService} from "../../../service/date.service";
 import {Observable, Subscription, tap} from "rxjs";
@@ -24,8 +24,8 @@ const moment = _rollupMoment || _moment;
   styleUrls: ['./exchange-input.component.css']
 })
 export class ExchangeInputComponent implements OnInit{
-  @Output("loaded") loadedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+  formReady: boolean = false;
   public exchangeInputForm: FormGroup;
 
   userCurrencies!: Observable<Currency[]>;
@@ -73,6 +73,8 @@ export class ExchangeInputComponent implements OnInit{
       hour: [""],
       minute: [""]
     });
+    this.exchangeInputForm.disable();
+    this.saveButtonDisabled = true;
     this.hours = [];
     for (let i = 0; i <= 23; i++) {
       this.hours.push(i);
@@ -169,7 +171,11 @@ export class ExchangeInputComponent implements OnInit{
     const result = this.userCurrenciesLoaded && this.userAccountsLoaded &&
       this.lastExchangeExpenseCurrencyLoaded && this.lastExchangeIncomeCurrencyLoaded &&
       this.lastExchangeAccountLoaded;
-    this.loadedEvent.emit(result);
+    this.formReady = result;
+    if (this.formReady) {
+      this.exchangeInputForm.enable();
+      this.saveButtonDisabled = false;
+    }
   }
 
   exchangeSave() {

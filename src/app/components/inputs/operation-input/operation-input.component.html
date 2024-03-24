@@ -1,4 +1,9 @@
-<div [formGroup]="operationInputForm" class="card mb-2 shadow-sm">
+<app-spinner [condition]="!formReady"/>
+<div *ngIf="this.editMode === true" class="modal-header">
+  <h4 *ngIf="this.operationType === eOperationType.EXPENSE"  class="modal-title">Редактировать расход</h4>
+  <h4 *ngIf="this.operationType === eOperationType.INCOME" class="modal-title">Редактировать доход</h4>
+</div>
+<div [formGroup]="operationInputForm" class="card" [ngClass]="{ 'shadow-sm': this.editMode !== true, 'mb-2': this.editMode !== true}">
   <div class="card-body">
     <div class="input-group mb-2">
       <div class="form-floating">
@@ -71,6 +76,10 @@
       <input type="text" class="form-control" id="floatingDescriptionInput" formControlName="description">
       <label for="floatingDescriptionInput">Примечание</label>
     </div>
-    <button class="btn btn-primary" (click)="operationInputSave()" [disabled]="saveButtonDisabled">Сохранить</button>
+    <button *ngIf="editMode !== true" class="btn btn-primary" (click)="operationInputSave()" [disabled]="saveButtonDisabled">Сохранить</button>
   </div>
+</div>
+<div *ngIf="editMode === true" class="modal-footer">
+  <button class="btn btn-outline-primary" (click)="operationInputUpdate()" [disabled]="saveButtonDisabled">Сохранить изменения</button>
+  <button class="btn btn-outline-primary ms-1" (click)="activeModal.dismiss('Close click')" [disabled]="saveButtonDisabled">Отменить</button>
 </div>

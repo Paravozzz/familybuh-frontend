@@ -6,6 +6,8 @@ import {OperationTypeEnum} from "../../../enums/OperationTypeEnum";
 import * as _moment from 'moment';
 import {default as _rollupMoment} from 'moment';
 import {Currency} from "../../../interfaces/Currency";
+import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {OperationInputComponent} from "../../inputs/operation-input/operation-input.component";
 
 const moment = _rollupMoment || _moment;
 @Component({
@@ -20,7 +22,7 @@ export class OperationWigetComponent implements OnInit {
   dailyOperationsSummary: {currency:Currency, summ:string}[] = [];
   reportDate = moment();
 
-  constructor(private operationService: OperationService) {
+  constructor(private operationService: OperationService, private modalService: NgbModal) {
     this.dailyOperations = this.operationService.dailyOperations;
     const summaryMap: Map<Currency, number> = new Map<Currency, number>();
     this.dailyOperations.subscribe(operations => {
@@ -67,4 +69,23 @@ export class OperationWigetComponent implements OnInit {
   get isYesterday(): boolean {
     return this.reportDate.format("DD-MM-yyyy") === moment().subtract(1, 'days').format("DD-MM-yyyy");
   }
+
+  openEditDialog(operationId: number) {
+    const modalRef: NgbModalRef = this.modalService.open(OperationInputComponent, {
+      centered: true,
+      backdrop: "static",
+      keyboard: false,
+      size: "lg"
+    });
+    modalRef.componentInstance.operationType = this.operationType;
+    modalRef.componentInstance.editMode = true;
+    modalRef.componentInstance.operationId = operationId;
+
+    modalRef.closed.subscribe({
+      next: value => {
+        this.operationService.dailyOperationsUpdate(this.operationType, moment().format());
+      }
+    })
+  }
+
 }

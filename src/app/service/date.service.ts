@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
-import {NgbCalendar, NgbDateAdapter} from "@ng-bootstrap/ng-bootstrap";
+import {NgbCalendar, NgbDate, NgbDateAdapter} from "@ng-bootstrap/ng-bootstrap";
 import * as _moment from 'moment';
 import {default as _rollupMoment} from 'moment';
+import {Moment} from "moment/moment";
 
 const moment = _rollupMoment || _moment;
 
@@ -70,5 +71,22 @@ export class DateService {
     }
 
     return dateAndTime.format();
+  }
+
+  public dbToView(operationDate: string|undefined): {date: NgbDate, hour: string, minute: string} {
+    let date: Moment;
+    if (operationDate != undefined) {
+      date = moment(operationDate);
+    } else {
+      date = moment();
+    }
+
+    let year: number = date.year();
+    let month: number = date.month() + 1;
+    let day: number = date.date();
+    let ngbDate: NgbDate = new NgbDate(year, month, day);
+    let hour: string = moment(operationDate).format("H");
+    let minute: string = moment(operationDate).format("m");
+    return {date: ngbDate, hour: hour, minute: minute};
   }
 }

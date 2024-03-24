@@ -23,6 +23,14 @@ export class OperationService {
   }
 
   /**
+   * Поиск операции по идентификатору
+   * @param operationId
+   */
+  public findById(operationId: number): Observable<OperationDto> {
+    return this.http.get<OperationDto>("/api/user/operation/" + operationId, {withCredentials: true});
+  }
+
+  /**
    * Создать расходную операцию
    * @param operationCreate
    */
@@ -36,6 +44,14 @@ export class OperationService {
    */
   public income(operationCreate: OperationCreate): Observable<OperationDto> {
     return this.http.post<OperationDto>("/api/user/operation/income", operationCreate, {withCredentials: true});
+  }
+
+  /**
+   * Отредактировать операцию
+   * @param operationCreate
+   */
+  public update(operationId: number, operationUpdate: OperationCreate): Observable<OperationDto> {
+    return this.http.put<OperationDto>("/api/user/operation/"+operationId, operationUpdate, {withCredentials: true});
   }
 
   /**

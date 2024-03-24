@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CurrencyService} from "../../../service/currency.service";
 import {AccountService} from "../../../service/account.service";
@@ -24,7 +24,7 @@ const moment = _rollupMoment || _moment;
   styleUrls: ['./transfer-input.component.css']
 })
 export class TransferInputComponent implements OnInit {
-  @Output("loaded") loadedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  formReady: boolean = false;
   public transferInputForm: FormGroup;
 
   userCurrencies!: Observable<Currency[]>;
@@ -74,6 +74,8 @@ export class TransferInputComponent implements OnInit {
       hour: [""],
       minute: [""]
     });
+    this.transferInputForm.disable();
+    this.saveButtonDisabled = true;
     this.hours = [];
     for (let i = 0; i <= 23; i++) {
       this.hours.push(i);
@@ -189,7 +191,11 @@ export class TransferInputComponent implements OnInit {
     const result = this.userCurrenciesLoaded && this.userAccountsLoaded &&
       this.lastTransferCurrencyLoaded &&
       this.lastTransferExpenseAccountLoaded && this.lastTransferIncomeAccountLoaded;
-    this.loadedEvent.emit(result);
+    this.formReady = result;
+    if (this.formReady) {
+      this.transferInputForm.enable();
+      this.saveButtonDisabled = false;
+    }
   }
 
   private _computeAccountId(accountName: string, currencyCode: string): number {

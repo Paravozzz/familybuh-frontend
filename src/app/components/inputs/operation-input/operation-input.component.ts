@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit, Optional} from '@angular/core';
 import {Currency} from "../../../interfaces/Currency";
 import {CurrencyService} from "../../../service/currency.service";
 import {map, Observable, Subscription, tap} from "rxjs";
@@ -14,7 +14,12 @@ import {OperationService} from "../../../service/operation.service";
 import {DateService} from "../../../service/date.service";
 import * as _moment from 'moment';
 import {default as _rollupMoment} from 'moment';
-import {amountCorrectValueValidator, amountPositiveOrZeroValueValidator} from "../../shared/validators/amount.validators";
+import {
+  amountCorrectValueValidator,
+  amountPositiveOrZeroValueValidator
+} from "../../shared/validators/amount.validators";
+import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
+import {OperationDto} from "../../../interfaces/OperationDto";
 
 const moment = _rollupMoment || _moment;
 
@@ -25,10 +30,15 @@ const moment = _rollupMoment || _moment;
 })
 export class OperationInputComponent implements OnInit {
 
+  @Input("editMode") editMode: boolean = false;
+  @Input("operationId") operationId: number = 0;
   @Input("operationType") operationType!: OperationTypeEnum;
-  @Output("loaded") loadedEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   public operationInputForm: FormGroup;
+
+  formReady: boolean = false;
+
+  eOperationType = OperationTypeEnum;
 
   userCurrencies!: Observable<Currency[]>;
   userCurrenciesLoaded: boolean = false;
@@ -41,6 +51,9 @@ export class OperationInputComponent implements OnInit {
   userAccountNames: string[] = [];
   userAccountsLoaded: boolean = false;
   selectedAccountName: string = "";
+
+  operation?: OperationDto;
+  operationLoaded: boolean = false;
 
   saveButtonDisabled: boolean = false;
 
@@ -64,7 +77,8 @@ export class OperationInputComponent implements OnInit {
    */
   private _accountsMap: Map<string, number> = new Map<string, number>();
 
-  constructor(private currencyService: CurrencyService,
+  constructor(@Optional() protected activeModal: NgbActiveModal,
+              private currencyService: CurrencyService,
               private categoryService: CategoryService,
               private accountService: AccountService,
               private settingService: SettingService,
@@ -75,12 +89,14 @@ export class OperationInputComponent implements OnInit {
       amount: ["0", [Validators.required, amountCorrectValueValidator(), amountPositiveOrZeroValueValidator()]],
       currencyCode: [""],
       accountName: [""],
-      categoryId: ["0"],
+      categoryId: [""],
       description: [""],
       date: [dateService.today],
       hour: [""],
       minute: [""]
     });
+    this.operationInputForm.disable();
+    this.saveButtonDisabled = true;
     this.hours = [];
     for (let i = 0; i <= 23; i++) {
       this.hours.push(i);
@@ -103,6 +119,10 @@ export class OperationInputComponent implements OnInit {
 
     //Счета
     this._loadAccounts();
+
+    if (this.editMode === true && this.operationId && this.operationId !== 0) {
+      this._loadOperation();
+    }
   }
 
   operationInputSave() {
@@ -122,6 +142,16 @@ export class OperationInputComponent implements OnInit {
       default:
         throw new Error("Incorrect operation type. Must be OperationTypeEnum.EXPENSE or OperationTypeEnum.INCOME");
     }
+  }
+
+  operationInputUpdate() {
+    this.saveButtonDisabled = true;
+    let value = this.operationInputForm.value;
+    value.date = this.dateService.computeDateAndTime(value);
+    value.accountId = this._computeAccountId(this.operationInputForm.getRawValue());
+    const operation: OperationCreate = <OperationCreate>value;
+    operation.amount = operation.amount.trim();
+    this._update(this.operationId, operation);
   }
 
   private _loadCategories() {
@@ -209,6 +239,23 @@ export class OperationInputComponent implements OnInit {
     });
   }
 
+  private _loadOperation() {
+    if (!this.operationId || this.operationId === 0)
+      return;
+
+    let subscription1 = this.operationService.findById(this.operationId).pipe(
+      tap(operation => {
+        this.operation = operation;
+        this.operationLoaded = true;
+        this._isLoaded();
+      })
+    ).subscribe({
+      complete: () => {
+      subscription1?.unsubscribe();
+    }
+  })
+  }
+
   private _computeAccountId(value: { accountName: string, currencyCode: string }): number {
     let accountId: number = 0;
     accountId = this._accountsMap.get(this.accountService.accountsHashCode2(value.accountName, value.currencyCode)) ?? 0;
@@ -216,11 +263,26 @@ export class OperationInputComponent implements OnInit {
   }
 
   private _createExpense(operation: OperationCreate) {
+    this.saveButtonDisabled = true;
     this.subscription = this.operationService.expense(operation).subscribe({
       next: value => {
         this._saveOperationDefaults(operation.currencyCode, operation.accountId, operation.categoryId)
       }, complete: () => {
         this._afterOperationCreate();
+      }, error: err => {
+        this._afterOperationCreate();
+      }
+    });
+  }
+
+  private _update(operationId: number, operation: OperationCreate) {
+    this.saveButtonDisabled = true;
+    this.subscription = this.operationService.update(operationId, operation).subscribe({
+      next: value => {
+        this._saveOperationDefaults(operation.currencyCode, operation.accountId, operation.categoryId)
+      }, complete: () => {
+        this._afterOperationCreate();
+        this.activeModal.close();
       }, error: err => {
         this._afterOperationCreate();
       }
@@ -234,6 +296,7 @@ export class OperationInputComponent implements OnInit {
   }
 
   private _createIncome(operation: OperationCreate) {
+    this.saveButtonDisabled = true;
     this.subscription = this.operationService.income(operation).subscribe({
       next: value => {
         this._saveOperationDefaults(operation.currencyCode, operation.accountId, operation.categoryId);
@@ -260,18 +323,36 @@ export class OperationInputComponent implements OnInit {
   }
 
   private _isLoaded(): void {
-    this.operationInputForm.patchValue({
-      currencyCode: this.selectedCurrency.code,
-    });
-    this.operationInputForm.patchValue({
-      categoryId: this.selectedCategory.id,
-    });
-    this.operationInputForm.patchValue({
-      accountName: this.selectedAccountName
-    });
-    const result = this.userCategoriesLoaded && this.userCurrenciesLoaded && this.userAccountsLoaded &&
+    let result = this.userCategoriesLoaded && this.userCurrenciesLoaded && this.userAccountsLoaded &&
     this.lastCategoryLoaded && this.lastCurrencyLoaded && this.lastAccountLoaded;
-    this.loadedEvent.emit(result);
+    if (this.editMode) {
+      result = result && this.operationLoaded;
+      if (result) {
+        this.formReady = result;
+        let viewDate = this.dateService.dbToView(this.operation?.date);
+        this.operationInputForm.patchValue({
+          amount: this.operation?.amount,
+          currencyCode: this.operation?.currency.code,
+          categoryId: this.operation?.categoryId,
+          accountName: this.operation?.accountName,
+          description: this.operation?.description,
+          date: viewDate.date,
+          hour: viewDate.hour,
+          minute: viewDate.minute
+        });
+      }
+    } else if (result) {
+      this.operationInputForm.patchValue({
+        currencyCode: this.selectedCurrency.code,
+        categoryId: this.selectedCategory.id,
+        accountName: this.selectedAccountName
+      });
+    }
+    this.formReady = result;
+    if (result) {
+      this.operationInputForm.enable();
+      this.saveButtonDisabled = false;
+    }
   }
 
   controlHasError(controlName: string, errorName: string) {
