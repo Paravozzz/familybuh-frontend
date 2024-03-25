@@ -18,6 +18,7 @@
         <td><span class="fw-medium">Категория</span></td>
         <td><span class="fw-medium">Сумма</span></td>
         <td><span class="fw-medium">Валюта</span></td>
+        <td><span class="fw-medium">Примечание</span></td>
         <td><span class="fw-medium">Действия</span></td>
       </tr>
       <tr *ngFor="let operation of dailyOperations|async">
@@ -27,6 +28,7 @@
         <td *ngIf="operationType === eOperationType.INCOME"><span class="income-amount">+{{operation.amount|number:"1.2-3"}}</span></td>
         <td *ngIf="operationType === eOperationType.EXPENSE"><span class="expense-amount">{{operation.currency.code}}</span></td>
         <td *ngIf="operationType === eOperationType.INCOME"><span class="income-amount">{{operation.currency.code}}</span></td>
+        <td><span>{{operation.description}}</span></td>
         <td>
           <button class="btn btn-sm btn-outline-primary me-1" (click)="openEditDialog(operation.operationId)">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
@@ -42,10 +44,10 @@
         </td>
       </tr>
       <tr *ngIf="dailyOperationsSummary.length !== 0">
-        <td colspan="5"></td>
+        <td colspan="6"></td>
       </tr>
       <tr *ngIf="dailyOperationsSummary.length === 0">
-        <td colspan="5">Нет операций</td>
+        <td colspan="6">Нет операций</td>
       </tr>
       <tr *ngFor="let operation of dailyOperationsSummary; index as i">
         <td colspan="2"><span *ngIf="i === 0" class="fw-medium">Итого:</span></td>
@@ -53,6 +55,7 @@
         <td *ngIf="operationType === eOperationType.INCOME"><span class="income-amount fw-medium">+{{operation.summ|number:"1.2-3"}}</span></td>
         <td *ngIf="operationType === eOperationType.EXPENSE"><span class="expense-amount fw-medium">{{operation.currency.code}}</span></td>
         <td *ngIf="operationType === eOperationType.INCOME"><span class="income-amount fw-medium">{{operation.currency.code}}</span></td>
+        <td></td>
         <td></td>
       </tr>
       </tbody>

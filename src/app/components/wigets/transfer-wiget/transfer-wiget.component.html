@@ -18,6 +18,7 @@
         <td><span class="fw-medium">На счёт</span></td>
         <td><span class="fw-medium">Сумма</span></td>
         <td><span class="fw-medium">Валюта</span></td>
+        <td><span class="fw-medium">Примечание</span></td>
         <td><span class="fw-medium">Действия</span></td>
       </tr>
       <tr *ngFor="let transfer of dailyTransfers|async">
@@ -26,6 +27,7 @@
         <td>{{transfer.incomeAccountName}}</td>
         <td><span class="income-amount">{{transfer.amount|number:"1.2-3"}}</span></td>
         <td><span class="income-amount">{{transfer.currency.code}}</span></td>
+        <td><span>{{transfer.description}}</span></td>
         <td>
           <button class="btn btn-sm btn-outline-primary me-1">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
@@ -40,13 +42,17 @@
           </button>
         </td>
       </tr>
-      <tr *ngIf="dailyTransfersSummary.length !== 0">
-        <td colspan="6"></td>
+      <tr *ngIf="dailyTransfersCount !== 0">
+        <td colspan="7"></td>
+      </tr>
+      <tr *ngIf="dailyTransfersCount === 0">
+        <td colspan="7">Нет перемещений</td>
       </tr>
       <tr *ngFor="let transfer of dailyTransfersSummary; index as i">
         <td colspan="3"><span *ngIf="i === 0" class="fw-medium">Итого:</span></td>
         <td><span class="income-amount fw-medium">{{transfer.summ|number:"1.2-3"}}</span></td>
         <td><span class="income-amount fw-medium">{{transfer.currency.code}}</span></td>
+        <td></td>
         <td></td>
       </tr>
       </tbody>

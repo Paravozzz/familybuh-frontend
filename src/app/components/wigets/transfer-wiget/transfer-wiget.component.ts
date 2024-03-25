@@ -18,6 +18,7 @@ export class TransferWigetComponent implements OnInit {
 
   dailyTransfers: Observable<TransferDto[]>;
   dailyTransfersSummary: {currency:Currency, summ:string}[] = [];
+  dailyTransfersCount: number = 0;
   reportDate = moment();
 
   constructor(private transferService: TransferService) {
@@ -27,8 +28,10 @@ export class TransferWigetComponent implements OnInit {
       summaryMap.clear();
       this.dailyTransfersSummary = [];
       if (!transfers || transfers.length == 0) {
+        this.dailyTransfersCount = 0;
         return;
       }
+      this.dailyTransfersCount = transfers.length;
       transfers.forEach(transfer => {
         const currency = transfer.currency;
         let summ = summaryMap.get(currency) ?? 0;

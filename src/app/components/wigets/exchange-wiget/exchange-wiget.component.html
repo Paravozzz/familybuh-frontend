@@ -17,6 +17,7 @@
         <td><span class="fw-medium">Счёт</span></td>
         <td><span class="fw-medium">Сумма</span></td>
         <td><span class="fw-medium">Валюта</span></td>
+        <td><span class="fw-medium">Примечание</span></td>
         <td><span class="fw-medium">Действия</span></td>
       </tr>
       <tr *ngFor="let exchange of dailyExchanges|async">
@@ -28,6 +29,7 @@
         <td><span class="expense-amount">{{exchange.expenseCurrency.code}}</span><br>
           <span class="income-amount">{{exchange.incomeCurrency.code}}</span>
         </td>
+        <td><span>{{exchange.description}}</span></td>
         <td>
           <button class="btn btn-sm btn-outline-primary me-1">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
@@ -42,15 +44,19 @@
           </button>
         </td>
       </tr>
-      <tr *ngIf="dailyExchangesSummary.length !== 0">
-        <td colspan="7"></td>
+      <tr *ngIf="dailyExchangesCount !== 0">
+        <td colspan="6"></td>
       </tr>
-      <tr *ngFor="let transfer of dailyExchangesSummary; index as i">
+      <tr *ngIf="dailyExchangesCount === 0">
+        <td colspan="6">Нет обменов</td>
+      </tr>
+      <tr *ngFor="let exchange of dailyExchangesSummary; index as i">
         <td colspan="2"><span *ngIf="i === 0" class="fw-medium">Итого:</span></td>
-        <td *ngIf="transfer.isExpense"><span class="expense-amount fw-medium">{{transfer.summ|number:"1.2-3"}}</span></td>
-        <td *ngIf="!transfer.isExpense"><span class="income-amount fw-medium">+{{transfer.summ|number:"1.2-3"}}</span></td>
-        <td *ngIf="transfer.isExpense"><span class="expense-amount fw-medium">{{transfer.currency.code}}</span></td>
-        <td *ngIf="!transfer.isExpense"><span class="income-amount fw-medium">{{transfer.currency.code}}</span></td>
+        <td *ngIf="exchange.isExpense"><span class="expense-amount fw-medium">{{exchange.summ|number:"1.2-3"}}</span></td>
+        <td *ngIf="!exchange.isExpense"><span class="income-amount fw-medium">+{{exchange.summ|number:"1.2-3"}}</span></td>
+        <td *ngIf="exchange.isExpense"><span class="expense-amount fw-medium">{{exchange.currency.code}}</span></td>
+        <td *ngIf="!exchange.isExpense"><span class="income-amount fw-medium">{{exchange.currency.code}}</span></td>
+        <td></td>
         <td></td>
       </tr>
       </tbody>

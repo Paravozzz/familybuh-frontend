@@ -17,6 +17,7 @@ export class ExchangeWigetComponent {
 
   dailyExchanges: Observable<ExchangeDto[]>;
   dailyExchangesSummary: {isExpense: boolean, currency:Currency, summ:string}[] = [];
+  dailyExchangesCount: number = 0;
   reportDate = moment();
 
   constructor(private exchangeService: ExchangeService) {
@@ -26,8 +27,10 @@ export class ExchangeWigetComponent {
       summaryMap.clear();
       this.dailyExchangesSummary = [];
       if (!exchanges || exchanges.length == 0) {
+        this.dailyExchangesCount = 0;
         return;
       }
+      this.dailyExchangesCount = exchanges.length;
       exchanges.forEach(exchange => {
         const expenseCurrency = exchange.expenseCurrency;
         const incomeCurrency = exchange.incomeCurrency;
@@ -45,10 +48,10 @@ export class ExchangeWigetComponent {
         const currencyCode = entry[0];
         const expenseSumm = entry[1].expense;
         const incomeSumm = entry[1].income;
-        if (Math.abs(Math.round(expenseSumm)) !== 0) {
+        if (expenseSumm !== 0) {
           this.dailyExchangesSummary.push({currency: currencyCode, isExpense: true, summ: expenseSumm.toString()})
         }
-        if (Math.abs(Math.round(incomeSumm)) !== 0) {
+        if (incomeSumm !== 0) {
           this.dailyExchangesSummary.push({currency: currencyCode, isExpense: false, summ: incomeSumm.toString()})
         }
       }
