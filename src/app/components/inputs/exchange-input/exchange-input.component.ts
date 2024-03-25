@@ -221,7 +221,7 @@ export class ExchangeInputComponent implements OnInit{
   private _afterOperationCreate() {
     this.saveButtonDisabled = false;
     this.subscription?.unsubscribe();
-    this.exchangeService.dailyExchangesUpdate(moment().format());
+    this.exchangeService.dailyExchangesUpdate(this.dateService.computeDateAndTime(this.exchangeInputForm.getRawValue()));
   }
 
   controlHasError(controlName: string, errorName: string) {

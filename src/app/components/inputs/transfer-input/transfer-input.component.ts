@@ -221,7 +221,7 @@ export class TransferInputComponent implements OnInit {
   private _afterOperationCreate() {
     this.saveButtonDisabled = false;
     this.subscription?.unsubscribe();
-    this.transferService.dailyTransfersUpdate(moment().format());
+    this.transferService.dailyTransfersUpdate(this.dateService.computeDateAndTime(this.transferInputForm.getRawValue()));
   }
 
   controlHasError(controlName: string, errorName: string) {

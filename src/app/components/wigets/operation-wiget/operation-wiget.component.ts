@@ -41,6 +41,10 @@ export class OperationWigetComponent implements OnInit {
       for (const entry of summaryMap.entries()) {
         this.dailyOperationsSummary.push({currency: entry[0], summ: entry[1].toString()})
       }
+      let date_string = operations.at(0)?.date;
+      if (date_string) {
+        this.reportDate = moment(date_string);
+      }
     });
   }
 
@@ -83,7 +87,7 @@ export class OperationWigetComponent implements OnInit {
 
     modalRef.closed.subscribe({
       next: value => {
-        this.operationService.dailyOperationsUpdate(this.operationType, moment().format());
+        this.operationService.dailyOperationsUpdate(this.operationType, this.reportDate.format());
       }
     })
   }

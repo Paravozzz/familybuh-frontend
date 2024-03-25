@@ -292,7 +292,7 @@ export class OperationInputComponent implements OnInit {
   private _afterOperationCreate() {
     this.saveButtonDisabled = false;
     this.subscription?.unsubscribe();
-    this.operationService.dailyOperationsUpdate(this.operationType, moment().format());
+    this.operationService.dailyOperationsUpdate(this.operationType, this.dateService.computeDateAndTime(this.operationInputForm.getRawValue()));
   }
 
   private _createIncome(operation: OperationCreate) {

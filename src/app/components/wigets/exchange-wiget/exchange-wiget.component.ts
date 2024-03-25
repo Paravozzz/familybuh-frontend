@@ -52,6 +52,11 @@ export class ExchangeWigetComponent {
           this.dailyExchangesSummary.push({currency: currencyCode, isExpense: false, summ: incomeSumm.toString()})
         }
       }
+
+      let date_string = exchanges.at(0)?.date;
+      if (date_string) {
+        this.reportDate = moment(date_string);
+      }
     });
   }
 

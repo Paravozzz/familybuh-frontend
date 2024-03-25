@@ -39,6 +39,11 @@ export class TransferWigetComponent implements OnInit {
       for (const entry of summaryMap.entries()) {
         this.dailyTransfersSummary.push({currency: entry[0], summ: entry[1].toString()})
       }
+
+      let date_string = transfers.at(0)?.date;
+      if (date_string) {
+        this.reportDate = moment(date_string);
+      }
     });
   }
 
